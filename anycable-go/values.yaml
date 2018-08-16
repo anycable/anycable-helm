@@ -1,0 +1,116 @@
+nodeSelector: {}
+
+replicas: 1
+
+image:
+  repository: anycable/anycable-go
+  tag: 0.6.0-preview6
+  pullPolicy: IfNotPresent
+
+ingress:
+  enable: false
+  hosts:
+    - acme: false
+      name: ""
+      path: /cable
+      tls:
+        crt: ""
+        key: ""
+      # annotations:
+      #   nginx.ingress.kubernetes.io/proxy-body-size: "32m"
+
+revisionHistoryLimit: 10
+
+rollingUpdate:
+  maxSurge: 1
+  maxUnavailable: 0
+
+# Default resource limits for items API app.
+# Do not forget to tune them to match your needs.
+resources:
+  limits:
+    cpu: 350m
+    memory: 400Mi
+  requests:
+    cpu: 350m
+    memory: 400Mi
+
+livenessProbe:
+  httpGet:
+    path: /metrics
+    port: 8081
+  initialDelaySeconds: 90
+  timeoutSeconds: 3
+  successThreshold: 1
+  failureThreshold: 3
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /metrics
+    port: 8081
+  initialDelaySeconds: 15
+  timeoutSeconds: 3
+  successThreshold: 1
+  failureThreshold: 3
+  periodSeconds: 10
+
+# Application options (passed as env variables)
+env:
+  # listen ip address or host
+  anycableHost: "0.0.0.0"
+
+  # listen port number
+  anycablePort: "8080"
+
+  # WebSocket endpoint path
+  anycablePath: "/cable"
+
+  # SSL certificate path
+  anycableSslCert: ""
+
+  # SSL private key path
+  anycableSslKey: ""
+
+  # Redis db url
+  anycableRedisUrl: "redis://localhost:6379/5"
+
+  # Redis channel for broadcasts
+  anycableRedisChannel: "__anycable__"
+
+  # RPC service address
+  anycableRpcHost: "localhost:50051"
+
+  # List of headers to proxy to RPC
+  anycableHeaders: "cookie"
+
+  # Max number of Disconnect calls per second
+  anycableDisconnectRate: "100"
+
+  # Set logging level (debug/info/warn/error/fatal)
+  anycableLogLevel: "info"
+
+  # Set logging format (text, json)
+  anycableLogFormat: "text"
+
+  # Enable debug mode (more verbose logging)
+  anycableDebug: ""
+
+  # Enable metrics logging (with info level)
+  anycableMetricsLog: ""
+
+  # Specify how often flush metrics logs (in seconds)
+  anycableMetricsLogInterval: "15"
+
+  # Specify the path to custom Ruby formatter script (only supported on MacOS and Linux)
+  anycableMetricsLogFormatter: ""
+
+  # Enable HTTP metrics endpoint at the specified path
+  anycableMetricsHttp: "/metrics"
+
+  # Server host for metrics endpoint, default: the same as for main server,
+  anycableMetricsHost: ""
+
+  # Server port for metrics endpoint, default: the same as for main server,
+  anycableMetricsPort: "8081"
+

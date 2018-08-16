@@ -1,0 +1,18 @@
+apiVersion: v1
+description: A Helm chart for anycable-go application.
+name: anycable-go
+version: 0.1.0
+appVersion: 0.6.0-preview6
+home: https://github.com/anycable/anycable-go
+keywords:
+  - anycable
+  - websocket
+sources:
+  - https://github.com/anycable/anycable-go
+maintainers:
+  - name: gfrntz
+    email: takebsd@gmail.com
+  - name: dragonsmith
+    email: agon.smith@gmail.com
+  - name: palkan
+    email: dementiev.vm@gmail.com

@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name | quote }}
+  labels:
+    app: {{ template "anycable.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: {{ default 2 .Values.replicas }}
+  revisionHistoryLimit: {{ default 10 .Values.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      app: {{ template "anycable.name" . }}
+      release: {{ .Release.Name | quote }}
+    strategy:
+      rollingUpdate:
+        maxSurge: {{ default 1 .Values.rollingUpdate.maxSurge }}
+        maxUnavailable: {{ default 1 .Values.rollingUpdate.maxUnavailable }}
+      type: {{ .Values.image.pullPolicy | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "anycable.name" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+        release: {{ .Release.Name | quote }}
+        heritage: {{ .Release.Service | quote }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/env-secret.yml") . | sha256sum }}
+      name: {{ .Release.Name | quote }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app: {{ template "anycable.name" . }}
+                  release: {{ .Release.Name | quote }}
+            weight: 100
+      containers:
+      - name: anycable-go
+        env:
+        {{- if .Values.env.anycableHost }}
+        - name: ANYCABLE_HOST
+          value: {{ .Values.env.anycableHost | quote }}
+        {{- end }}
+        {{- if .Values.env.anycablePort }}
+        - name: ANYCABLE_PORT
+          value: {{ .Values.env.anycablePort | quote }}
+        {{- end }}
+        {{- if .Values.env.anycablePath }}
+        - name: ANYCABLE_PATH
+          value: {{ .Values.env.anycablePath | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableSslCert }}
+        - name: ANYCABLE_SSL_CERT
+          value: {{ .Values.env.anycableSslCert | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableSslKey }}
+        - name: ANYCABLE_SSL_KEY
+          value: {{ .Values.env.anycableSslKey | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableRedisUrl }}
+        - name: ANYCABLE_REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              key: anycableRedisUrl
+              name: {{ .Release.Name }}-secrets
+        {{- end }}
+        {{- if .Values.env.anycableRedisChannel }}
+        - name: ANYCABLE_REDIS_CHANNEL
+          value: {{ .Values.env.anycableRedisChannel | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableRpcHost }}
+        - name: ANYCABLE_RPC_HOST
+          value: {{ .Values.env.anycableRpcHost | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableHeaders }}
+        - name: ANYCABLE_HEADERS
+          value: {{ .Values.env.anycableHeaders | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableDisconnectRate }}
+        - name: ANYCABLE_DISCONNECT_RATE
+          value: {{ .Values.env.anycableDisconnectRate | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableLogLevel }}
+        - name: ANYCABLE_LOG_LEVEL
+          value: {{ .Values.env.anycableLogLevel | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableLogFormat }}
+        - name: ANYCABLE_LOG_FORMAT
+          value: {{ .Values.env.anycableLogFormat | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableDebug }}
+        - name: ANYCABLE_DEBUG
+          value: {{ .Values.env.anycableDebug | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableMetricsLog }}
+        - name: ANYCABLE_METRICS_LOG
+          value: {{ .Values.env.anycableMetricsLog | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableMetricsLogInterval }}
+        - name: ANYCABLE_METRICS_LOG_INTERVAL
+          value: {{ .Values.env.anycableMetricsLogInterval | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableMetricsLogFormatter }}
+        - name: ANYCABLE_METRICS_LOG_FORMATTER
+          value: {{ .Values.env.anycableMetricsLogFormatter | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableMetricsHttp }}
+        - name: ANYCABLE_METRICS_HTTP
+          value: {{ .Values.env.anycableMetricsHttp | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableMetricsHost }}
+        - name: ANYCABLE_METRICS_HOST
+          value: {{ .Values.env.anycableMetricsHost | quote }}
+        {{- end }}
+        {{- if .Values.env.anycableMetricsPort }}
+        - name: ANYCABLE_METRICS_PORT
+          value: {{ .Values.env.anycableMetricsPort | quote }}
+        {{- end }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: IfNotPresent
+        {{- if .Values.livenessProbe }}
+        livenessProbe:
+{{ toYaml .Values.livenessProbe| indent 10 }}
+        {{- end }}
+        {{- if .Values.readinessProbe }}
+        readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 10 }}
+        {{- end }}
+        {{- if .Values.resources }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+         {{- end }}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

@@ -1,0 +1,30 @@
+{{- if .Values.ingress.enable }}
+{{- $serviceName := .Release.Name }}
+{{- range $host := .Values.ingress.hosts }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "{{ $host.name }}-ingress"
+  annotations:
+    {{- if $host.acme }}
+    kubernetes.io/tls-acme: "true"
+    {{- end }}
+    {{- range $key, $value := $host.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  tls:
+  - hosts:
+    - {{ $host.name | quote }}
+    secretName: "{{ $host.name }}-tls"
+  rules:
+  - host: {{ $host.name | quote }}
+    http:
+      paths:
+      - path: {{ $host.path | quote }}
+        backend:
+          serviceName: {{ $serviceName | quote }}
+          servicePort: 80
+{{- end }}
+{{- end }}
