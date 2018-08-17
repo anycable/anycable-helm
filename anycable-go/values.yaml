@@ -9,15 +9,27 @@ image:
 
 ingress:
   enable: false
-  hosts:
-    - acme: false
-      name: ""
-      path: /cable
-      tls:
-        crt: ""
-        key: ""
-      # annotations:
-      #   nginx.ingress.kubernetes.io/proxy-body-size: "32m"
+  path: /cable
+  annotations: {}
+    # nginx.ingress.kubernetes.io/proxy-body-size: "32m"
+  acme: {}
+    # hosts: []
+  nonAcme:
+    hosts: []
+    # - secretName: example-tls
+    #   names: []
+    #   tls:
+    #     crt: ""
+    #     key: ""
+
+  # - acme: false
+  #   name: example
+  #   hosts: []
+  #   path: /cable
+  #   tls:
+  #     crt: ""
+  #     key: ""
+
 
 revisionHistoryLimit: 10
 
