@@ -1,7 +1,7 @@
 apiVersion: v1
 description: A Helm chart for anycable-go application.
 name: anycable-go
-version: 0.1.0
+version: 0.2.0
 appVersion: 0.6.0-preview6
 home: https://github.com/anycable/anycable-go
 keywords:

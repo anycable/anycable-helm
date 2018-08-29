@@ -1,11 +1,11 @@
 {{- if and .Values.ingress.enable .Values.ingress.nonAcme.hosts }}
-{{- $releaseName := .Release.Name }}
+{{- $root := . }}
 {{- $httpLocation := .Values.ingress.path }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $releaseName }}-ingress"
+  name: "{{ template "anycableGo.fullname" $root }}"
   annotations:
     {{- range $key, $value := .Values.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
@@ -27,7 +27,7 @@ spec:
       paths:
       - path: {{ $httpLocation | quote }}
         backend:
-          serviceName: {{ $releaseName | quote }}
+          serviceName: "{{ template "anycableGo.fullname" $root }}"
           servicePort: 80
 {{- end }}
 {{- end }}

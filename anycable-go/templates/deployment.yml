@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name | quote }}
+  name: {{ template "anycableGo.fullname" . }}
   labels:
-    app: {{ template "anycable.name" . }}
+    app: {{ template "anycableGo.name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
@@ -13,7 +13,7 @@ spec:
   revisionHistoryLimit: {{ default 10 .Values.revisionHistoryLimit }}
   selector:
     matchLabels:
-      app: {{ template "anycable.name" . }}
+      app: {{ template "anycableGo.name" . }}
       release: {{ .Release.Name | quote }}
     strategy:
       rollingUpdate:
@@ -23,7 +23,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "anycable.name" . }}
+        app: {{ template "anycableGo.name" . }}
         chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
         release: {{ .Release.Name | quote }}
         heritage: {{ .Release.Service | quote }}
@@ -38,7 +38,7 @@ spec:
               topologyKey: kubernetes.io/hostname
               labelSelector:
                 matchLabels:
-                  app: {{ template "anycable.name" . }}
+                  app: {{ template "anycableGo.name" . }}
                   release: {{ .Release.Name | quote }}
             weight: 100
       containers:
@@ -69,7 +69,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: anycableRedisUrl
-              name: {{ .Release.Name }}-secrets
+              name: {{ template "anycableGo.fullname" . }}-secrets
         {{- end }}
         {{- if .Values.env.anycableRedisChannel }}
         - name: ANYCABLE_REDIS_CHANNEL

@@ -1,11 +1,11 @@
 {{- if and .Values.ingress.enable .Values.ingress.acme }}
-{{- $releaseName := .Release.Name }}
+{{- $root := . }}
 {{- $httpLocation := .Values.ingress.path }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ $releaseName }}-ingress-acme"
+  name: "{{ template "anycableGo.fullname" $root }}-acme"
   annotations:
     kubernetes.io/tls-acme: "true"
     {{- range $key, $value := .Values.ingress.annotations }}
@@ -17,7 +17,7 @@ spec:
 {{- range $host := .Values.ingress.acme.hosts }}
     - {{ $host | quote }}
 {{- end }}
-    secretName: "{{ $releaseName }}-tls-acme"
+    secretName: "{{ template "anycableGo.fullname" $root }}-tls-acme"
   rules:
 {{- range $host := .Values.ingress.acme.hosts }}
   - host: {{ $host | quote }}
@@ -25,7 +25,7 @@ spec:
       paths:
       - path: {{ $httpLocation | quote }}
         backend:
-          serviceName: {{ $releaseName | quote }}
+          serviceName: "{{ template "anycableGo.fullname" $root }}"
           servicePort: 80
 {{- end }}
 {{- end }}
