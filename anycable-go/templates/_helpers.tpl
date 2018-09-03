@@ -7,7 +7,7 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "anycableGo.fullname" -}}
-{{- default (printf "%s-anycable-go" .Release.Name) .Values.nameOverride | trunc 63 -}}
+{{- default (printf "%s-anycable-go" .Release.Name) .Values.fullNameOverride | trunc 63 -}}
 {{- end -}}
 
 {{/*
