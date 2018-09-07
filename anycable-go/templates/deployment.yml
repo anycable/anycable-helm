@@ -4,6 +4,7 @@ metadata:
   name: {{ template "anycableGo.fullname" . }}
   labels:
     app: {{ template "anycableGo.name" . }}
+    component: anycable-go
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
@@ -14,6 +15,7 @@ spec:
   selector:
     matchLabels:
       app: {{ template "anycableGo.name" . }}
+      component: anycable-go
       release: {{ .Release.Name | quote }}
     strategy:
       rollingUpdate:
@@ -24,6 +26,7 @@ spec:
     metadata:
       labels:
         app: {{ template "anycableGo.name" . }}
+        component: anycable-go
         chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
         release: {{ .Release.Name | quote }}
         heritage: {{ .Release.Service | quote }}

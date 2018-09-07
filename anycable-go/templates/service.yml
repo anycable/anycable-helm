@@ -15,5 +15,6 @@ spec:
     targetPort: {{ .Values.env.anycablePort }}
   selector:
     app: {{ template "anycableGo.name" . }}
+    component: anycable-go
     release: {{ .Release.Name | quote }}
   type: ClusterIP
