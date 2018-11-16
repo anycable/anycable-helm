@@ -127,7 +127,7 @@ spec:
           value: {{ .Values.env.anycableMetricsPort | quote }}
         {{- end }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         {{- if .Values.livenessProbe }}
         livenessProbe:
 {{ toYaml .Values.livenessProbe| indent 10 }}
