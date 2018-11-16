@@ -17,11 +17,11 @@ spec:
       app: {{ template "anycableGo.name" . }}
       component: anycable-go
       release: {{ .Release.Name | quote }}
-    strategy:
-      rollingUpdate:
-        maxSurge: {{ default 1 .Values.rollingUpdate.maxSurge }}
-        maxUnavailable: {{ default 1 .Values.rollingUpdate.maxUnavailable }}
-      type: {{ .Values.image.pullPolicy | quote }}
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ default 1 .Values.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ default 1 .Values.rollingUpdate.maxUnavailable }}
+    type: RollingUpdate
   template:
     metadata:
       labels:
