@@ -1,0 +1,29 @@
+apiVersion: v1
+entries:
+  anycable-go:
+  - apiVersion: v1
+    appVersion: 0.6.4
+    created: "2020-02-06T15:21:59.15163321+03:00"
+    description: A Helm chart for anycable-go websocket server.
+    digest: 9be63403ea96135e5012b9a58713e8f576921dbf6dde4b4812a328ef0d6b3675
+    home: https://anycable.io/
+    icon: https://docs.anycable.io/assets/images/logo.svg
+    keywords:
+    - anycable
+    - websocket
+    maintainers:
+    - email: takebsd@gmail.com
+      name: gfrntz
+    - email: agon.smith@gmail.com
+      name: dragonsmith
+    - email: dementiev.vm@gmail.com
+      name: palkan
+    - email: envek@envek.name
+      name: envek
+    name: anycable-go
+    sources:
+    - https://github.com/anycable/anycable-go
+    urls:
+    - https://helm.anycable.io/anycable-go-0.2.4.tgz
+    version: 0.2.4
+generated: "2020-02-06T15:21:59.150718742+03:00"
