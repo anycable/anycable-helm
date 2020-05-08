@@ -132,7 +132,13 @@ See `values.yaml` for some more Kubernetes-specific configuration options.
     helm lint anycable-go
     ```
 
- 5. Commit and push your changes
+ 5. Commit and push your changes:
+
+    ```sh
+    git commit -m "anycable-go: vX.Y.Z"
+    git tag anycable-go-X.Y.Z -s -m "anycable-go chart vX.Y.Z for app version A.B.C"
+    git push --follow-tags
+    ```
 
  6. Build and publish charts into repository:
 
