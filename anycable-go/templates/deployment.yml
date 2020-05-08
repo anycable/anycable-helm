@@ -50,15 +50,17 @@ spec:
             weight: 100
       containers:
       - name: anycable-go
+        ports:
+        - name: http
+          containerPort: {{ required "A valid listening port for anycable is required! Please specify `env.anycablePort` in values!" .Values.env.anycablePort }}
+          protocol: TCP
         env:
         {{- if .Values.env.anycableHost }}
         - name: ANYCABLE_HOST
           value: {{ .Values.env.anycableHost | quote }}
         {{- end }}
-        {{- if .Values.env.anycablePort }}
         - name: ANYCABLE_PORT
           value: {{ .Values.env.anycablePort | quote }}
-        {{- end }}
         {{- if .Values.env.anycablePath }}
         - name: ANYCABLE_PATH
           value: {{ .Values.env.anycablePath | quote }}
