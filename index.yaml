@@ -3,7 +3,7 @@ entries:
   anycable-go:
   - apiVersion: v1
     appVersion: 0.6.4
-    created: "2020-02-06T15:21:59.15163321+03:00"
+    created: "2020-05-08T17:52:43.50262362+03:00"
     description: A Helm chart for anycable-go websocket server.
     digest: 9be63403ea96135e5012b9a58713e8f576921dbf6dde4b4812a328ef0d6b3675
     home: https://anycable.io/
@@ -26,4 +26,4 @@ entries:
     urls:
     - https://helm.anycable.io/anycable-go-0.2.4.tgz
     version: 0.2.4
-generated: "2020-02-06T15:21:59.150718742+03:00"
+generated: "2020-05-08T17:52:43.501899959+03:00"
