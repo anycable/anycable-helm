@@ -67,6 +67,20 @@ readinessProbe:
   failureThreshold: 3
   periodSeconds: 10
 
+serviceMonitor:
+  enabled: false
+  ## Specify a namespace if needed
+  # namespace: monitoring
+  # fallback to the prometheus default unless specified
+  # interval: 10s
+  ## Set of labels that need to be present in ServiceMonitor to be discovered by Prometheus:
+  ## [Prometheus Selector Label](https://github.com/bitnami/charts/tree/master/bitnami/prometheus-operator#prometheus-operator-1)
+  ## [Kube Prometheus Selector Label](https://github.com/bitnami/charts/tree/master/bitnami/prometheus-operator#exporters)
+  ## E.g. if you use prometheus-operator:
+  # labels:
+  #   release: prometheus-operator
+  labels: {}
+
 # Application options (passed as env variables)
 env:
   # listen ip address or host

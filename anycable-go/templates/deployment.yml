@@ -54,6 +54,11 @@ spec:
         - name: http
           containerPort: {{ required "A valid listening port for anycable is required! Please specify `env.anycablePort` in values!" .Values.env.anycablePort }}
           protocol: TCP
+        {{- if .Values.env.anycableMetricsPort }}
+        - name: metrics
+          containerPort: {{ .Values.env.anycableMetricsPort }}
+          protocol: TCP
+        {{- end }}
         env:
         {{- if .Values.env.anycableHost }}
         - name: ANYCABLE_HOST
