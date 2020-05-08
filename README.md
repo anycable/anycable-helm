@@ -73,7 +73,7 @@ These are the values used to configure anycable-go itself:
 
 |Value|Description|Default|
 |-----|-----------|-------|
-|**image.tag**|version of docker image to use|`v0.6.4`|
+|**image.tag**|version of docker image to use|`v0.6.5`|
 |**env.anycableHost**|listen ip address or host|`0.0.0.0`|
 |**env.anycablePort**|listen port number|`8080`|
 |**env.anycablePath**|WebSocket endpoint path|`/cable`|
