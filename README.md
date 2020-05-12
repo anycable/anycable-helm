@@ -98,6 +98,10 @@ These are the values used to configure anycable-go itself:
 |**env.anycableMetricsHttp**|Enable HTTP metrics endpoint at the specified path|`/metrics`|
 |**env.anycableMetricsHost**|Server host for metrics endpoint, default: the same as for main server,||
 |**env.anycableMetricsPort**|Server port for metrics endpoint, default: the same as for main server,|`8081`|
+|**serviceMonitor.enabled**|Enable creation of `ServiceMonitor` resource for automatic metrics discovery by Prometheus operator|`false`|
+|**serviceMonitor.namespace**|Namespace to create ServiceMonitor in (if differs from chart's namespace)|_chart's namespace_|
+|**serviceMonitor.interval**|Metrics scrape interval|_Prometheus default_|
+|**serviceMonitor.labels**|Labels that should be present in service monitor to be discovered|`{}`|
 
 ### Ingress configuration
 
