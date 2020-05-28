@@ -101,6 +101,10 @@ spec:
         - name: ANYCABLE_DISCONNECT_RATE
           value: {{ .Values.env.anycableDisconnectRate | quote }}
         {{- end }}
+        {{- if .Values.env.anycableMaxMessageSize }}
+        - name: ANYCABLE_MAX_MESSAGE_SIZE
+          value: {{ .Values.env.anycableMaxMessageSize | quote }}
+        {{- end }}
         {{- if .Values.env.anycableLogLevel }}
         - name: ANYCABLE_LOG_LEVEL
           value: {{ .Values.env.anycableLogLevel | quote }}

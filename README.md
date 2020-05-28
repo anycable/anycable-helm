@@ -84,6 +84,7 @@ These are the values used to configure anycable-go itself:
 |**env.anycableRpcHost**|RPC service address|`localhost:50051`|
 |**env.anycableHeaders**|List of headers to proxy to RPC|`cookie`|
 |**env.anycableDisconnectRate**|Max number of Disconnect calls per second|`100`|
+|**env.anycableMaxMessageSize**|Maximum size of a message in bytes|`65536`|
 
 ### Monitoring
 

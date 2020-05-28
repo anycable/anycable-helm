@@ -113,6 +113,9 @@ env:
   # Max number of Disconnect calls per second
   anycableDisconnectRate: "100"
 
+  # Maximum size of a message in bytes
+  anycableMaxMessageSize: "65536"
+
   # Set logging level (debug/info/warn/error/fatal)
   anycableLogLevel: "info"
 
