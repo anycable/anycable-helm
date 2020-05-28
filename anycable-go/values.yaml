@@ -142,3 +142,6 @@ env:
 
   # HTTP health endpoint path
   anycableHealthPath: "/health"
+
+  # Maximum size of a message in bytes, default: 65536
+  anycableMaxMessageSize: ""

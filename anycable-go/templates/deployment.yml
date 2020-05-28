@@ -141,6 +141,10 @@ spec:
         - name: ANYCABLE_HEALTH_PATH
           value: {{ .Values.env.anycableHealthPath | quote }}
         {{- end }}
+        {{- if .Values.env.anycableMaxMessageSize }}
+        - name: ANYCABLE_MAX_MESSAGE_SIZE
+          value: {{ .Values.env.anycableMaxMessageSize | quote }}
+        {{- end }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         {{- if .Values.livenessProbe }}
