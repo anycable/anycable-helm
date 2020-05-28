@@ -92,6 +92,7 @@ These are the values used to configure anycable-go itself:
 |**env.anycableLogLevel**|Set logging level (debug/info/warn/error/fatal)|`info`|
 |**env.anycableLogFormat**|Set logging format (text, json)|`text`|
 |**env.anycableDebug**|Enable debug mode (more verbose logging)||
+|**env.anycableHealthPath**|HTTP health endpoint path|`/health`|
 |**env.anycableMetricsLog**|Enable metrics logging (with info level)||
 |**env.anycableMetricsLogInterval**|Specify how often flush metrics logs (in seconds)|`15`|
 |**env.anycableMetricsLogFormatter**|Specify the path to custom Ruby formatter script (only supported on MacOS and Linux)||
