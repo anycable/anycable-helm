@@ -137,6 +137,10 @@ spec:
         - name: ANYCABLE_METRICS_PORT
           value: {{ .Values.env.anycableMetricsPort | quote }}
         {{- end }}
+        {{- if .Values.env.anycableHealthPath }}
+        - name: ANYCABLE_HEALTH_PATH
+          value: {{ .Values.env.anycableHealthPath | quote }}
+        {{- end }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         {{- if .Values.livenessProbe }}

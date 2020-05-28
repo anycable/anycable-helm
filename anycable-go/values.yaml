@@ -139,3 +139,6 @@ env:
 
   # Server port for metrics endpoint, default: the same as for main server,
   anycableMetricsPort: "8081"
+
+  # HTTP health endpoint path
+  anycableHealthPath: "/health"
