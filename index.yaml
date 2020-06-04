@@ -1,0 +1,18 @@
+apiVersion: v1
+entries:
+  cm-anycable-go:
+  - apiVersion: v1
+    appVersion: 0.6.5
+    description: A Helm chart for anycable-go websocket server.
+    home: https://anycable.io/
+    icon: https://docs.anycable.io/assets/images/logo.svg
+    keywords:
+    - anycable
+    - websocket
+    name: cm-anycable-go
+    sources:
+    - https://github.com/CareMessagePlatform/anycable-helm
+    urls:
+    - https://storage.googleapis.com/caremessage-rpms/cm-anycable-go.tgz
+    version: 0.1
+generated: "2020-05-28T17:35:59.547424012+03:00"

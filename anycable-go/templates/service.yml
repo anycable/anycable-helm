@@ -23,4 +23,4 @@ spec:
     app: {{ template "anycableGo.name" . }}
     component: anycable-go
     release: {{ .Release.Name | quote }}
-  type: ClusterIP
+  type: {{ .Values.caremessage.servicetype }}

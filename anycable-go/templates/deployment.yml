@@ -163,4 +163,7 @@ spec:
         terminationMessagePolicy: File
       dnsPolicy: ClusterFirst
       restartPolicy: Always
+      dnsConfig:
+        searches:
+          - {{ .Values.caremessage.environment }}.cm
       terminationGracePeriodSeconds: 30
