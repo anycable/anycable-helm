@@ -77,8 +77,6 @@ These are the values used to configure anycable-go itself:
 |**env.anycableHost**|listen ip address or host|`0.0.0.0`|
 |**env.anycablePort**|listen port number|`8080`|
 |**env.anycablePath**|WebSocket endpoint path|`/cable`|
-|**env.anycableSslCert**|SSL certificate path||
-|**env.anycableSslKey**|SSL private key path||
 |**env.anycableRedisUrl**|Redis DB url|`redis://localhost:6379/5`|
 |**env.anycableRedisKeepaliveInterval**|Interval to periodically ping Redis to make sure it's alive||
 |**env.anycableRedisChannel**|Redis channel for broadcasts|`__anycable__`|
@@ -118,6 +116,16 @@ These are the values used to configure anycable-go itself:
 |**ingress.acme**|Enables the ingress resource annotation which tells cert-manager to issue a Let's Encrypt certificate|`{}`|
 |**ingress.nonAcme**|Enables the ingress resource annotation which tells cert-manager to use existing certificate|`{ hosts: [] }`|
 |**ingress.annotations**|Additional annotations for the ingress resource||
+
+### SSL/TLS configuration
+
+Only in case if you can't terminate SSL at Ingress controller or need encryption inside your cluster.
+
+|Value|Description|Default|
+|-----|-----------|-------|
+|**tls.secretName**|Specify name of TLS secret to use. Existing secret will be used if you don't provide certificate and key||
+|**tls.crt**|Specify full certificate chain in PEM format to be written in new TLS secret||
+|**tls.key**|Specify private key in PEM format to be written in new TLS secret||
 
 See `values.yaml` for some more Kubernetes-specific configuration options.
 

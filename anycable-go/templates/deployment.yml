@@ -70,13 +70,11 @@ spec:
         - name: ANYCABLE_PATH
           value: {{ .Values.env.anycablePath | quote }}
         {{- end }}
-        {{- if .Values.env.anycableSslCert }}
+        {{- if .Values.tls }}
         - name: ANYCABLE_SSL_CERT
-          value: {{ .Values.env.anycableSslCert | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableSslKey }}
+          value: /etc/ssl/certs/tls.crt
         - name: ANYCABLE_SSL_KEY
-          value: {{ .Values.env.anycableSslKey | quote }}
+          value: /etc/ssl/certs/tls.key
         {{- end }}
         {{- if .Values.env.anycableRedisUrl }}
         - name: ANYCABLE_REDIS_URL
@@ -194,6 +192,18 @@ spec:
          {{- end }}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
+        {{- if .Values.tls }}
+        volumeMounts:
+        - name: ssl
+          mountPath: "/etc/ssl/certs"
+          readOnly: true
+        {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
+      {{- if .Values.tls }}
+      volumes:
+      - name: ssl
+        secret:
+          secretName: {{ .Values.tls.secretName | quote }}
+      {{- end }}
