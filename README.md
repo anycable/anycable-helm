@@ -80,6 +80,7 @@ These are the values used to configure anycable-go itself:
 |**env.anycableSslCert**|SSL certificate path||
 |**env.anycableSslKey**|SSL private key path||
 |**env.anycableRedisUrl**|Redis DB url|`redis://localhost:6379/5`|
+|**env.anycableRedisKeepaliveInterval**|Interval to periodically ping Redis to make sure it's alive||
 |**env.anycableRedisChannel**|Redis channel for broadcasts|`__anycable__`|
 |**env.anycableRpcHost**|RPC service address|`localhost:50051`|
 |**env.anycableHeaders**|List of headers to proxy to RPC|`cookie`|

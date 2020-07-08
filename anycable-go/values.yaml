@@ -104,6 +104,9 @@ env:
   # Redis channel for broadcasts
   anycableRedisChannel: "__anycable__"
 
+  # Interval to periodically ping Redis to make sure it's alive, default: 30
+  anycableRedisKeepaliveInterval: ""
+
   # RPC service address
   anycableRpcHost: "localhost:50051"
 

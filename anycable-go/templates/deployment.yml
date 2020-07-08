@@ -89,6 +89,10 @@ spec:
         - name: ANYCABLE_REDIS_CHANNEL
           value: {{ .Values.env.anycableRedisChannel | quote }}
         {{- end }}
+        {{- if .Values.env.anycableRedisKeepaliveInterval }}
+        - name: ANYCABLE_REDIS_KEEPALIVE_INTERVAL
+          value: {{ .Values.env.anycableRedisKeepaliveInterval | quote }}
+        {{- end }}
         {{- if .Values.env.anycableRpcHost }}
         - name: ANYCABLE_RPC_HOST
           value: {{ .Values.env.anycableRpcHost | quote }}
