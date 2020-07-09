@@ -89,6 +89,17 @@ spec:
         - name: ANYCABLE_REDIS_CHANNEL
           value: {{ .Values.env.anycableRedisChannel | quote }}
         {{- end }}
+        {{- if .Values.env.anycableRedisSentinels }}
+        - name: ANYCABLE_REDIS_SENTINELS
+          valueFrom:
+            secretKeyRef:
+              key: anycableRedisSentinels
+              name: {{ template "anycableGo.fullname" . }}-secrets
+        {{- end }}
+        {{- if .Values.env.anycableRedisSentinelDiscoveryInterval }}
+        - name: ANYCABLE_REDIS_SENTINEL_DISCOVERY_INTERVAL
+          value: {{ .Values.env.anycableRedisSentinelDiscoveryInterval | quote }}
+        {{- end }}
         {{- if .Values.env.anycableRedisKeepaliveInterval }}
         - name: ANYCABLE_REDIS_KEEPALIVE_INTERVAL
           value: {{ .Values.env.anycableRedisKeepaliveInterval | quote }}
