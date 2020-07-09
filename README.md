@@ -59,7 +59,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to helm 
 ```shell
 helm upgrade -i anycable-go \
   --namespace anycable-go \
-  --set image.tag=1.0.0 \
+  --set image.tag=1.0.1 \
   anycable/anycable-go
 ```
 
@@ -73,7 +73,7 @@ These are the values used to configure anycable-go itself:
 
 |Value|Description|Default|
 |-----|-----------|-------|
-|**image.tag**|version of docker image to use|`1.0.0`|
+|**image.tag**|version of docker image to use|`1.0.1`|
 |**env.anycableHost**|listen ip address or host|`0.0.0.0`|
 |**env.anycablePort**|listen port number|`8080`|
 |**env.anycablePath**|WebSocket endpoint path|`/cable`|
