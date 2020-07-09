@@ -72,9 +72,9 @@ spec:
         {{- end }}
         {{- if .Values.tls }}
         - name: ANYCABLE_SSL_CERT
-          value: /etc/ssl/certs/tls.crt
+          value: /etc/ssl/anycable-go/tls.crt
         - name: ANYCABLE_SSL_KEY
-          value: /etc/ssl/certs/tls.key
+          value: /etc/ssl/anycable-go/tls.key
         {{- end }}
         {{- if .Values.env.anycableRedisUrl }}
         - name: ANYCABLE_REDIS_URL
@@ -195,7 +195,7 @@ spec:
         {{- if .Values.tls }}
         volumeMounts:
         - name: ssl
-          mountPath: "/etc/ssl/certs"
+          mountPath: "/etc/ssl/anycable-go"
           readOnly: true
         {{- end }}
       dnsPolicy: ClusterFirst
