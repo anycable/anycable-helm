@@ -162,13 +162,31 @@ spec:
         {{- end }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
-        {{- if .Values.livenessProbe }}
+        {{- if hasKey .Values "livenessProbe" }}
+        livenessProbe: {{ toYaml .Values.livenessProbe | nindent 10 }}
+        {{- else }}
         livenessProbe:
-{{ toYaml .Values.livenessProbe| indent 10 }}
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 90
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
         {{- end }}
-        {{- if .Values.readinessProbe }}
+        {{- if hasKey .Values "readinessProbe" }}
+        readinessProbe: {{ toYaml .Values.readinessProbe | nindent 10 }}
+        {{- else }}
         readinessProbe:
-{{ toYaml .Values.readinessProbe | indent 10 }}
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 15
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
         {{- end }}
         {{- if .Values.resources }}
         resources:
