@@ -107,8 +107,8 @@ env:
   # Comma separated list of sentinel hosts, format: ':password@hostname:port,..'
   anycableRedisSentinels: ""
 
-  # Interval to rediscover sentinels in seconds, default: 30
-  anycableRedisSentinelDiscoveryInterval: ""
+  # Interval to rediscover sentinels in seconds, anycable-go default: 30
+  anycableRedisSentinelDiscoveryInterval: "30"
 
   # Interval to periodically ping Redis to make sure it's alive, default: 30
   anycableRedisKeepaliveInterval: ""

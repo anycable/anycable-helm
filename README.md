@@ -83,7 +83,7 @@ These are the values used to configure anycable-go itself:
 |**env.anycableRedisKeepaliveInterval**|Interval to periodically ping Redis to make sure it's alive||
 |**env.anycableRedisChannel**|Redis channel for broadcasts|`__anycable__`|
 |**env.anycableRedisSentinels**|Comma separated list of sentinel hosts, format: `:password@host:port,…`||
-|**env.anycableRedisSentinelDiscoveryInterval**|Interval to rediscover sentinels in seconds||
+|**env.anycableRedisSentinelDiscoveryInterval**|Interval to rediscover sentinels in seconds|`30`|
 |**env.anycableRpcHost**|RPC service address|`localhost:50051`|
 |**env.anycableHeaders**|List of headers to proxy to RPC|`cookie`|
 |**env.anycableDisconnectRate**|Max number of Disconnect calls per second|`100`|
