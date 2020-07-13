@@ -161,9 +161,17 @@ spec:
          {{- end }}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/cmcerts
+          name: certificates-secret-volume
+          readOnly: true
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       dnsConfig:
         searches:
           - {{ .Values.caremessage.environment }}.cm
+      volumes:
+      - name: certificates-secret-volume
+        secret:
+          secretName: caremessage-secrets-certificates
       terminationGracePeriodSeconds: 30
