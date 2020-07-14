@@ -1,12 +1,15 @@
-.PHONY: prepare build release
+.PHONY: prepare refresh build release
 
 repository:
 	git worktree add repository gh-pages
 
 prepare: repository
 
+refresh: prepare
+	git pull --rebase --stat
+
 # Replace this rule with whatever builds your project
-build: prepare
+build: prepare refresh
 	helm package -d repository/ anycable-go
 	helm repo index --url https://helm.anycable.io/ --merge repository/index.yaml repository/
 
