@@ -85,6 +85,19 @@ serviceMonitor:
   #   release: prometheus-operator
   labels: {}
 
+tls: {}
+  # secretName: "anycable-go-tls-secret"
+  # Keep empty to use existing secret
+  # crt: ~
+  # key: ~
+  # OR fill it with PEM-encoded full certificate chain and private key to create new secret:
+  # crt: |
+  #   -----BEGIN CERTIFICATE-----
+  #   …
+  # key: |
+  #   -----BEGIN PRIVATE KEY-----
+  #   …
+
 # Application options (passed as env variables)
 env:
   # listen ip address or host
@@ -95,12 +108,6 @@ env:
 
   # WebSocket endpoint path
   anycablePath: "/cable"
-
-  # SSL certificate path
-  anycableSslCert: ""
-
-  # SSL private key path
-  anycableSslKey: ""
 
   # Redis db url
   anycableRedisUrl: "redis://localhost:6379/5"

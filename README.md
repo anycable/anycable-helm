@@ -77,8 +77,6 @@ These are the values used to configure anycable-go itself:
 |**env.anycableHost**|listen ip address or host|`0.0.0.0`|
 |**env.anycablePort**|listen port number|`8080`|
 |**env.anycablePath**|WebSocket endpoint path|`/cable`|
-|**env.anycableSslCert**|SSL certificate path||
-|**env.anycableSslKey**|SSL private key path||
 |**env.anycableRedisUrl**|Redis DB url|`redis://localhost:6379/5`|
 |**env.anycableRedisKeepaliveInterval**|Interval to periodically ping Redis to make sure it's alive||
 |**env.anycableRedisChannel**|Redis channel for broadcasts|`__anycable__`|
@@ -119,7 +117,78 @@ These are the values used to configure anycable-go itself:
 |**ingress.nonAcme**|Enables the ingress resource annotation which tells cert-manager to use existing certificate|`{ hosts: [] }`|
 |**ingress.annotations**|Additional annotations for the ingress resource||
 
+### SSL/TLS configuration
+
+Only in case if you can't terminate SSL at Ingress controller or need encryption inside your cluster.
+
+|Value|Description|Default|
+|-----|-----------|-------|
+|**tls.secretName**|Specify name of TLS secret to use. Existing secret will be used if you don't provide certificate and key||
+|**tls.crt**|Specify full certificate chain in PEM format to be written in new TLS secret||
+|**tls.key**|Specify private key in PEM format to be written in new TLS secret||
+
 See `values.yaml` for some more Kubernetes-specific configuration options.
+
+## Configuration examples
+
+#### Encrypting communication between ingress-nginx and anycable-go using private CA
+
+ 0. Obtain certificate/key pair for anycable-go and CA root certificate for ingress-nginx from your CA.
+
+    For testing purposes you can generate your own CA with following commands:
+
+    ```sh
+    # Generate one-time private CA
+    openssl req -x509 -sha256 -newkey rsa:4096 -keyout ca.key -out ca.crt -days 356 -nodes -subj '/CN=Fake CA'
+    # Issue certificate for anycable-go using it
+    openssl req -new -newkey rsa:4096 -keyout server.key -out server.csr -nodes -subj '/CN=anycable-go'
+    openssl x509 -req -sha256 -days 365 -in server.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out server.crt
+    ```
+
+    See https://github.com/kubernetes/ingress-nginx/issues/4503#issuecomment-536835782 for details.
+
+ 1. Place private CA root certificate into separate secret containing _only_ `ca.crt` key:
+
+    ```sh
+    kubectl create secret generic ca-private --from-file=ca.crt=ca.crt
+    ```
+
+    See https://github.com/kubernetes/ingress-nginx/issues/4688 for details
+
+    Place certificate/key pair for anycable-go into separate TLS secret
+
+    ```sh
+    kubectl create secret tls anycable-go-tls-private --from-file=tls.crt=server.crt --from-file=tls.key=server.key
+    ```
+
+ 2. Reference secret with CA root certificate in the `nginx.ingress.kubernetes.io/proxy-ssl-secret` annotation (with namespace)
+
+ 3. Specify `HTTPS` as upstream protocol in `nginx.ingress.kubernetes.io/backend-protocol` annotation.
+
+ 4. Specify anycable-go certificate's `CN` (or one of `AltSubjectNames`) in [`proxy_ssl_name`](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_ssl_name) directive in configuration snippet. Nginx sends the content of `$proxy_host` variable by default and in nginx-ingress always sends `upstream_balancer` as hostname in SNI extension and we need override it.
+
+ 5. Enable upstream SSL verification by setting `nginx.ingress.kubernetes.io/proxy-ssl-verify` annotation to `'on'`
+
+Complete example:
+
+```yaml
+# values.yaml
+fullNameOverride: anycable-go
+ingress:
+  enable: true
+  path: /cable
+  acme:
+    hosts:
+      - example.com
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_ssl_name anycable-go;
+    nginx.ingress.kubernetes.io/proxy-ssl-secret: default/ca-private
+    nginx.ingress.kubernetes.io/proxy-ssl-verify: 'on'
+tls:
+  secretName: anycable-go-tls
+```
 
 ## Development
 
