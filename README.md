@@ -129,6 +129,19 @@ Only in case if you can't terminate SSL at Ingress controller or need encryption
 
 See `values.yaml` for some more Kubernetes-specific configuration options.
 
+### Custom ENV values
+
+When a new version of anycable become available, the chart can be not updated yet. In this case you would need to add new environment variables to the application.
+These variables can be added to the **env.custom** section of values. Under the hood, custom env variables are passed to the container through the secret.
+
+```yaml
+# ...
+env:
+  # ...
+  custom:
+    NEW_FEATURE: foobar
+```
+
 ## Configuration examples
 
 #### Encrypting communication between ingress-nginx and anycable-go using private CA
