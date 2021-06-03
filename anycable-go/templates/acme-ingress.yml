@@ -27,7 +27,7 @@ spec:
       paths:
         {{- if eq $apiVersion "networking.k8s.io/v1" }}
         - path: {{ $httpLocation | quote }}
-          pathType: Exact
+          pathType: ImplementationSpecific
           backend:
             service:
               name: {{ $serviceName | quote }}
