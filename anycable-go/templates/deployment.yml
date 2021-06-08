@@ -76,23 +76,9 @@ spec:
         - name: ANYCABLE_SSL_KEY
           value: /etc/ssl/anycable-go/tls.key
         {{- end }}
-        {{- if .Values.env.anycableRedisUrl }}
-        - name: ANYCABLE_REDIS_URL
-          valueFrom:
-            secretKeyRef:
-              key: anycableRedisUrl
-              name: {{ template "anycableGo.fullname" . }}-secrets
-        {{- end }}
         {{- if .Values.env.anycableRedisChannel }}
         - name: ANYCABLE_REDIS_CHANNEL
           value: {{ .Values.env.anycableRedisChannel | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableRedisSentinels }}
-        - name: ANYCABLE_REDIS_SENTINELS
-          valueFrom:
-            secretKeyRef:
-              key: anycableRedisSentinels
-              name: {{ template "anycableGo.fullname" . }}-secrets
         {{- end }}
         {{- if .Values.env.anycableRedisSentinelDiscoveryInterval }}
         - name: ANYCABLE_REDIS_SENTINEL_DISCOVERY_INTERVAL
@@ -158,6 +144,9 @@ spec:
         - name: ANYCABLE_MAX_MESSAGE_SIZE
           value: {{ .Values.env.anycableMaxMessageSize | quote }}
         {{- end }}
+        envFrom:
+          - secretRef:
+              name: "{{ template "anycableGo.fullname" . }}-secrets"
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         {{- if hasKey .Values "livenessProbe" }}

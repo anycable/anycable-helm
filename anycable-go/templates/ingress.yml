@@ -1,8 +1,9 @@
 {{- if and .Values.ingress.enable .Values.ingress.nonAcme.hosts }}
 {{- $root := . }}
 {{- $httpLocation := .Values.ingress.path }}
+{{- $apiVersion := include "apiVersions.ingress" $ }}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: {{- $apiVersion }}
 kind: Ingress
 metadata:
   name: "{{ template "anycableGo.fullname" $root }}"
@@ -22,13 +23,24 @@ spec:
   rules:
 {{- range $secret := .Values.ingress.nonAcme.hosts }}
 {{- range $host := $secret.names }}
+{{- $serviceName := include "anycableGo.fullname" $root }}
   - host: {{ $host | quote }}
     http:
       paths:
-      - path: {{ $httpLocation | quote }}
-        backend:
-          serviceName: "{{ template "anycableGo.fullname" $root }}"
-          servicePort: 80
+        {{- if eq $apiVersion "networking.k8s.io/v1" }}
+        - path: {{ $httpLocation | quote }}
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: {{ $serviceName | quote }}
+              port:
+                number: 80
+        {{- else }}
+        - path: {{ $httpLocation | quote }}
+          backend:
+            serviceName: {{ $serviceName | quote }}
+            servicePort: 80
+        {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

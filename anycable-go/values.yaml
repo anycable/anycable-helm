@@ -165,3 +165,12 @@ env:
 
   # Maximum size of a message in bytes, default: 65536
   anycableMaxMessageSize: ""
+
+  # Under this key you can define custom env variables (for example,
+  # to support new anycable features, not added to the chart yet).
+  # All variables from this part are added to the pod through the secret.
+  #
+  # Example
+  #   custom:
+  #     NEW_FEATURE: foobar
+  custom: {}
