@@ -1,7 +1,7 @@
-{{- if and .Values.ingress.enable .Values.ingress.acme }}
+{{- if (.Values.ingress.enable | and .Values.ingress.acme | and .Values.ingress.acme.hosts) }}
 {{- $root := . }}
 {{- $httpLocation := .Values.ingress.path }}
-{{- $apiVersion := include "apiVersions.ingress" $ }}
+{{- $apiVersion := include "anycableGo.apiVersions.ingress" $ }}
 ---
 apiVersion: {{ $apiVersion }}
 kind: Ingress
