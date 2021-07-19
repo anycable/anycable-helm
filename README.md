@@ -73,9 +73,14 @@ These are the values used to configure anycable-go itself:
 
 |Value|Description|Default|
 |-----|-----------|-------|
-|**image.tag**|version of docker image to use|`1.0.1`|
-|**env.anycableHost**|listen ip address or host|`0.0.0.0`|
-|**env.anycablePort**|listen port number|`8080`|
+|**image.repository**|Choose between `anycable/anycable-go` and `ghcr.io/anycable/anycable-go-pro`|`anycable/anycable-go`|
+|**image.tag**|Version of docker image to use|`1.0.2`|
+|**image.pullSecrets.enabled**|Enable creating secret for pulling image from AnyCable Pro private registry|`false`|
+|**image.pullSecrets.registry**|URL of a private registry you want to authorize to|`ghcr.io`|
+|**image.pullSecrets.username**|Github username|``|
+|**image.pullSecrets.password**|Github token|``|
+|**env.anycableHost**|Listen ip address or host|`0.0.0.0`|
+|**env.anycablePort**|Listen port number|`8080`|
 |**env.anycablePath**|WebSocket endpoint path|`/cable`|
 |**env.anycableRedisUrl**|Redis DB url|`redis://localhost:6379/5`|
 |**env.anycableRedisKeepaliveInterval**|Interval to periodically ping Redis to make sure it's alive||
