@@ -30,3 +30,17 @@ Template to generate apiVersion for ingress
 {{- print "networking.k8s.io/v1beta1" -}}
 {{- end -}}
 {{- end }}
+
+{{/*
+Template to generate secrets for a private Docker repository for K8s to use
+*/}}
+{{- define "anycableGo.imagePullSecrets" }}
+{{- with .Values.image.pullSecrets -}}
+{{- if .enabled }}
+{{- $username := required "image.pullSecrets.username" .username -}}
+{{- $registry := required "image.pullSecrets.registry" .registry -}}
+{{- $password := required "image.pullSecrets.password" .password -}}
+{{- printf "{\"auths\": {\"%s\": {\"auth\": \"%s\"}}}" $registry (printf "%s:%s" $username $password | b64enc) | b64enc }}
+{{- end }}
+{{- end -}}
+{{- end -}}

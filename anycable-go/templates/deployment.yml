@@ -48,6 +48,10 @@ spec:
                   app: {{ template "anycableGo.name" . }}
                   release: {{ .Release.Name | quote }}
             weight: 100
+      {{- if .Values.image.pullSecrets.enabled }}
+      imagePullSecrets:
+        - name: "{{ .Release.Name }}-docker-registry-secret"
+      {{- end }}
       containers:
       - name: anycable-go
         ports:
