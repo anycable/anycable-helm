@@ -17,18 +17,22 @@ Template to generate secrets for a private Docker repository for K8s to use
 {{- printf "{\"auths\": {\"%s\": {\"auth\": \"%s\"}}}" .Values.imageCredentials.registry (printf "%s:%s" .Values.imageCredentials.username .Values.imageCredentials.password | b64enc) | b64enc }}
 {{- end }}
 
-{{/*
-Template to generate apiVersion for ingress
-*/}}
-{{- define "apiVersions.ingress" }}
-{{- $apiVersion := "" }}
-{{- $gitVersion := $.Capabilities.KubeVersion.GitVersion -}}
-{{- $apiVersions := $.Capabilities.APIVersions -}}
-{{- if and ($apiVersions.Has "networking.k8s.io/v1") (semverCompare ">= 1.19.x" $gitVersion) -}}
-{{- print "networking.k8s.io/v1" -}}
-{{- else -}}
-{{- print "networking.k8s.io/v1beta1" -}}
-{{- end -}}
+{{/* Template to generate apiVersion for ingress */}}
+{{- define "anycableGo.apiVersions.ingress" }}
+    {{- $kubeVersion := $.Capabilities.KubeVersion.Version }}
+    {{- $apiVersions := $.Capabilities.APIVersions }}
+
+    {{- if ($kubeVersion | semverCompare ">=1.22.0-0") -}}
+        {{- if $apiVersions.Has "networking.k8s.io/v1" -}}
+            {{- "networking.k8s.io/v1" -}}
+        {{- end -}}
+    {{- else if ($kubeVersion | semverCompare ">=1.19.0-0" | and ($apiVersions.Has "networking.k8s.io/v1")) -}}
+        {{- "networking.k8s.io/v1" -}}
+    {{- else if ($kubeVersion | semverCompare ">=1.14.0-0" | and ($apiVersions.Has "networking.k8s.io/v1beta1")) -}}
+        {{- "networking.k8s.io/v1beta1" -}}
+    {{- else if $apiVersions.Has "extensions/v1beta1" -}}
+        {{- "extensions/v1beta1" -}}
+    {{- end -}}
 {{- end }}
 
 {{/*
