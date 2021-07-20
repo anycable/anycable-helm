@@ -3,7 +3,32 @@ entries:
   anycable-go:
   - apiVersion: v1
     appVersion: 1.0.2
-    created: "2021-07-20T12:30:53.556835982+03:00"
+    created: "2021-07-20T17:18:01.110698851+03:00"
+    description: A Helm chart for anycable-go websocket server.
+    digest: 8a025aaca3fe91e42c0da048f94311f1fc15db2d8a46bd726a699170c9718f8a
+    home: https://anycable.io/
+    icon: https://docs.anycable.io/assets/images/logo.svg
+    keywords:
+    - anycable
+    - websocket
+    maintainers:
+    - email: takebsd@gmail.com
+      name: gfrntz
+    - email: agon.smith@gmail.com
+      name: dragonsmith
+    - email: dementiev.vm@gmail.com
+      name: palkan
+    - email: envek@envek.name
+      name: envek
+    name: anycable-go
+    sources:
+    - https://github.com/anycable/anycable-go
+    urls:
+    - https://helm.anycable.io/anycable-go-0.5.1.tgz
+    version: 0.5.1
+  - apiVersion: v1
+    appVersion: 1.0.2
+    created: "2021-07-20T17:18:01.11021261+03:00"
     description: A Helm chart for anycable-go websocket server.
     digest: 59c6f874ebe441da6fbf3fd8ad6cab222c474e4faa0f9ca35a04b38b4b3ac568
     home: https://anycable.io/
@@ -28,7 +53,7 @@ entries:
     version: 0.5.0
   - apiVersion: v1
     appVersion: 1.0.2
-    created: "2021-07-20T12:30:53.556345079+03:00"
+    created: "2021-07-20T17:18:01.109734028+03:00"
     description: A Helm chart for anycable-go websocket server.
     digest: 643863abb0852c969af0d990d140a98a50d023690f769ca4d432ae4b3801ac82
     home: https://anycable.io/
@@ -53,7 +78,7 @@ entries:
     version: 0.4.1
   - apiVersion: v1
     appVersion: 1.0.1
-    created: "2021-07-20T12:30:53.555894841+03:00"
+    created: "2021-07-20T17:18:01.109258953+03:00"
     description: A Helm chart for anycable-go websocket server.
     digest: b794e11cf50847faade6c4f36142454087ee5025d1be77932b3cabfa78510690
     home: https://anycable.io/
@@ -78,7 +103,7 @@ entries:
     version: 0.4.0
   - apiVersion: v1
     appVersion: 1.0.1
-    created: "2021-07-20T12:30:53.555450798+03:00"
+    created: "2021-07-20T17:18:01.108648825+03:00"
     description: A Helm chart for anycable-go websocket server.
     digest: e21cb7d02e10fe9a080bfbb198cc5998b3c79584deee1aac59ac13c78349ee43
     home: https://anycable.io/
@@ -103,7 +128,7 @@ entries:
     version: 0.3.3
   - apiVersion: v1
     appVersion: 1.0.0
-    created: "2021-07-20T12:30:53.55500204+03:00"
+    created: "2021-07-20T17:18:01.108141002+03:00"
     description: A Helm chart for anycable-go websocket server.
     digest: b9670bf3042185e85c2aac490ce8f9344f3e795810e68fc39353a0164ebd3733
     home: https://anycable.io/
@@ -128,7 +153,7 @@ entries:
     version: 0.3.2
   - apiVersion: v1
     appVersion: 0.6.5
-    created: "2021-07-20T12:30:53.55455297+03:00"
+    created: "2021-07-20T17:18:01.107677423+03:00"
     description: A Helm chart for anycable-go websocket server.
     digest: aedbace1098b24995fdb00a3a6e5fc20e02f6c2318b1ec77aace2547bf4f45ec
     home: https://anycable.io/
@@ -153,7 +178,7 @@ entries:
     version: 0.3.1
   - apiVersion: v1
     appVersion: 0.6.5
-    created: "2021-07-20T12:30:53.554122571+03:00"
+    created: "2021-07-20T17:18:01.107218754+03:00"
     description: A Helm chart for anycable-go websocket server.
     digest: 8c28882be6fa0f21056b20470350940df1d83cc917cf869afb51998ec6ddf161
     home: https://anycable.io/
@@ -178,7 +203,7 @@ entries:
     version: 0.3.0
   - apiVersion: v1
     appVersion: 0.6.5
-    created: "2021-07-20T12:30:53.553683301+03:00"
+    created: "2021-07-20T17:18:01.106773879+03:00"
     description: A Helm chart for anycable-go websocket server.
     digest: 2e9acbcec94d0dbd2f555ff4aebb5883496e514e3a127e83e2025ffebb5c69cb
     home: https://anycable.io/
@@ -203,7 +228,7 @@ entries:
     version: 0.2.5
   - apiVersion: v1
     appVersion: 0.6.4
-    created: "2021-07-20T12:30:53.55327421+03:00"
+    created: "2021-07-20T17:18:01.10635126+03:00"
     description: A Helm chart for anycable-go websocket server.
     digest: 9be63403ea96135e5012b9a58713e8f576921dbf6dde4b4812a328ef0d6b3675
     home: https://anycable.io/
@@ -226,4 +251,4 @@ entries:
     urls:
     - https://helm.anycable.io/anycable-go-0.2.4.tgz
     version: 0.2.4
-generated: "2021-07-20T12:30:53.552762233+03:00"
+generated: "2021-07-20T17:18:01.105824866+03:00"
