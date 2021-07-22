@@ -31,7 +31,7 @@ AnyCable uses the same protocol as ActionCable, so you can use its JavaScript cl
 ## Installing chart
 
 ```shell
-helm repo add anycable https://helm.anycable.net/
+helm repo add anycable https://helm.anycable.io/
 
 # With Helm 3
 helm upgrade -i anycable-go anycable/anycable-go
