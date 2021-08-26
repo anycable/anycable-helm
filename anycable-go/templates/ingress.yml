@@ -34,11 +34,11 @@ spec:
             service:
               name: {{ $serviceName | quote }}
               port:
-                number: 80
+                name: http
           {{- else }}
           backend:
             serviceName: {{ $serviceName | quote }}
-            servicePort: 80
+            servicePort: http
           {{- end }}
 {{- end }}
 {{- end }}
