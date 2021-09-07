@@ -41,3 +41,11 @@ Template to generate secrets for a private Docker repository for K8s to use
 {{- end }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Template to
+*/}}
+{{- define "anycableGo.envFrom" -}}
+- secretRef:
+    name: {{ template "anycableGo.fullname" . }}-secrets
+{{- end -}}

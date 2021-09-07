@@ -148,9 +148,7 @@ spec:
         - name: ANYCABLE_MAX_MESSAGE_SIZE
           value: {{ .Values.env.anycableMaxMessageSize | quote }}
         {{- end }}
-        envFrom:
-          - secretRef:
-              name: "{{ template "anycableGo.fullname" . }}-secrets"
+        envFrom: {{ include "anycableGo.envFrom" . | nindent 10 }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         {{- if hasKey .Values "livenessProbe" }}
