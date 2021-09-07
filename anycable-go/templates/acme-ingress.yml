@@ -32,12 +32,12 @@ spec:
             service:
               name: {{ $serviceName | quote }}
               port:
-                number: 80
+                name: http
         {{- else }}
         - path: {{ $httpLocation | quote }}
           backend:
             serviceName: {{ $serviceName | quote }}
-            servicePort: 80
+            servicePort: http
         {{- end }}
 {{- end }}
 {{- end }}
