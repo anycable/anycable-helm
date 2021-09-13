@@ -64,90 +64,56 @@ spec:
           protocol: TCP
         {{- end }}
         env:
-        {{- if .Values.env.anycableHost }}
         - name: ANYCABLE_HOST
-          value: {{ .Values.env.anycableHost | quote }}
-        {{- end }}
+          value: {{ template "anycableGo.anycableHost" . }}
         - name: ANYCABLE_PORT
-          value: {{ .Values.env.anycablePort | quote }}
-        {{- if .Values.env.anycablePath }}
+          value: {{ template "anycableGo.anycablePort" . }}
         - name: ANYCABLE_PATH
-          value: {{ .Values.env.anycablePath | quote }}
-        {{- end }}
+          value: {{ template "anycableGo.anycablePath" . }}
         {{- if .Values.tls }}
         - name: ANYCABLE_SSL_CERT
           value: /etc/ssl/anycable-go/tls.crt
         - name: ANYCABLE_SSL_KEY
           value: /etc/ssl/anycable-go/tls.key
         {{- end }}
-        {{- if .Values.env.anycableRedisChannel }}
         - name: ANYCABLE_REDIS_CHANNEL
-          value: {{ .Values.env.anycableRedisChannel | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableRedisSentinelDiscoveryInterval }}
+          value: {{ template "anycableGo.anycableRedisChannel" . }}
         - name: ANYCABLE_REDIS_SENTINEL_DISCOVERY_INTERVAL
-          value: {{ .Values.env.anycableRedisSentinelDiscoveryInterval | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableRedisKeepaliveInterval }}
+          value: {{ template "anycableGo.anycableRedisSentinelDiscoveryInterval" . }}
         - name: ANYCABLE_REDIS_KEEPALIVE_INTERVAL
-          value: {{ .Values.env.anycableRedisKeepaliveInterval | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableRpcHost }}
+          value: {{ template "anycableGo.anycableRedisKeepaliveInterval" . }}
         - name: ANYCABLE_RPC_HOST
-          value: {{ .Values.env.anycableRpcHost | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableHeaders }}
+          value: {{ template "anycableGo.anycableRpcHost" . }}
         - name: ANYCABLE_HEADERS
-          value: {{ .Values.env.anycableHeaders | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableDisconnectRate }}
+          value: {{ template "anycableGo.anycableHeaders" . }}
         - name: ANYCABLE_DISCONNECT_RATE
-          value: {{ .Values.env.anycableDisconnectRate | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableLogLevel }}
+          value: {{ template "anycableGo.anycableDisconnectRate" . }}
         - name: ANYCABLE_LOG_LEVEL
-          value: {{ .Values.env.anycableLogLevel | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableLogFormat }}
+          value: {{ template "anycableGo.anycableLogLevel" . }}
         - name: ANYCABLE_LOG_FORMAT
-          value: {{ .Values.env.anycableLogFormat | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableDebug }}
+          value: {{ template "anycableGo.anycableLogFormat" . }}
         - name: ANYCABLE_DEBUG
-          value: {{ .Values.env.anycableDebug | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsLog }}
+          value: {{ template "anycableGo.anycableDebug" . }}
         - name: ANYCABLE_METRICS_LOG
-          value: {{ .Values.env.anycableMetricsLog | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsLogInterval }}
+          value: {{ template "anycableGo.anycableMetricsLog" . }}
         - name: ANYCABLE_METRICS_LOG_INTERVAL
-          value: {{ .Values.env.anycableMetricsLogInterval | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsLogFormatter }}
+          value: {{ template "anycableGo.anycableMetricsLogInterval" . }}
         - name: ANYCABLE_METRICS_LOG_FORMATTER
-          value: {{ .Values.env.anycableMetricsLogFormatter | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsHttp }}
+          value: {{ template "anycableGo.anycableMetricsLogFormatter" . }}
         - name: ANYCABLE_METRICS_HTTP
-          value: {{ .Values.env.anycableMetricsHttp | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsHost }}
+          value: {{ template "anycableGo.anycableMetricsHttp" . }}
         - name: ANYCABLE_METRICS_HOST
-          value: {{ .Values.env.anycableMetricsHost | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsPort }}
+          value: {{ template "anycableGo.anycableMetricsHost" . }}
         - name: ANYCABLE_METRICS_PORT
-          value: {{ .Values.env.anycableMetricsPort | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableHealthPath }}
+          value: {{ template "anycableGo.anycableMetricsPort" . }}
         - name: ANYCABLE_HEALTH_PATH
-          value: {{ .Values.env.anycableHealthPath | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMaxMessageSize }}
+          value: {{ template "anycableGo.anycableHealthPath" . }}
         - name: ANYCABLE_MAX_MESSAGE_SIZE
-          value: {{ .Values.env.anycableMaxMessageSize | quote }}
-        {{- end }}
+          value: {{ template "anycableGo.anycableMaxMessageSize" . }}
+        - name: ANYCABLE_REDIS_URL
+          valueFrom: {{ include "anycableGo.anycableRedisUrl" . | nindent 12 }}
+        - name: ANYCABLE_REDIS_SENTINELS
+          valueFrom: {{ include "anycableGo.anycableRedisSentinels" . | nindent 12 }}
         envFrom: {{ include "anycableGo.envFrom" . | nindent 10 }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}

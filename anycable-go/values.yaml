@@ -15,9 +15,11 @@ image:
 ingress:
   enable: false
   path: /cable
-  annotations: {}
+  annotations:
+    {}
     # nginx.ingress.kubernetes.io/proxy-body-size: "32m"
-  acme: {}
+  acme:
+    {}
     # hosts: []
   nonAcme:
     hosts: []
@@ -35,12 +37,20 @@ ingress:
   #     crt: ""
   #     key: ""
 
-
 revisionHistoryLimit: 10
 
 rollingUpdate:
   maxSurge: 1
   maxUnavailable: 0
+
+global:
+  anycableGo:
+    env: {}
+
+    redisUrlSecret:
+      {}
+      # name: my-secret
+      # key: ANYCABLE_REDIS_URL
 
 # Default resource limits for items API app.
 # Do not forget to tune them to match your needs.
@@ -76,6 +86,16 @@ resources:
 # livenessProbe: ~
 # readinessProbe: ~
 
+redisUrlSecret:
+  {}
+  # name: my-secret
+  # key: ANYCABLE_REDIS_URL
+
+redisSentinelsSecret:
+  {}
+  # name: my-secret
+  # key: ANYCABLE_REDIS_SENTINELS
+
 serviceMonitor:
   enabled: false
   ## Specify a namespace if needed
@@ -90,7 +110,8 @@ serviceMonitor:
   #   release: prometheus-operator
   labels: {}
 
-tls: {}
+tls:
+  {}
   # secretName: "anycable-go-tls-secret"
   # Keep empty to use existing secret
   # crt: ~
@@ -127,7 +148,7 @@ env:
   anycableRedisSentinelDiscoveryInterval: "30"
 
   # Interval to periodically ping Redis to make sure it's alive, default: 30
-  anycableRedisKeepaliveInterval: ""
+  anycableRedisKeepaliveInterval: "30"
 
   # RPC service address
   anycableRpcHost: "localhost:50051"
@@ -169,7 +190,7 @@ env:
   anycableHealthPath: "/health"
 
   # Maximum size of a message in bytes, default: 65536
-  anycableMaxMessageSize: ""
+  anycableMaxMessageSize: "65536"
 
   # Under this key you can define custom env variables (for example,
   # to support new anycable features, not added to the chart yet).
