@@ -15,11 +15,9 @@ image:
 ingress:
   enable: false
   path: /cable
-  annotations:
-    {}
+  annotations: {}
     # nginx.ingress.kubernetes.io/proxy-body-size: "32m"
-  acme:
-    {}
+  acme: {}
     # hosts: []
   nonAcme:
     hosts: []
@@ -47,8 +45,7 @@ global:
   anycableGo:
     env: {}
 
-    redisUrlSecret:
-      {}
+    redisUrlSecret: {}
       # name: my-secret
       # key: ANYCABLE_REDIS_URL
 
@@ -86,13 +83,11 @@ resources:
 # livenessProbe: ~
 # readinessProbe: ~
 
-redisUrlSecret:
-  {}
+redisUrlSecret: {}
   # name: my-secret
   # key: ANYCABLE_REDIS_URL
 
-redisSentinelsSecret:
-  {}
+redisSentinelsSecret: {}
   # name: my-secret
   # key: ANYCABLE_REDIS_SENTINELS
 
@@ -110,8 +105,7 @@ serviceMonitor:
   #   release: prometheus-operator
   labels: {}
 
-tls:
-  {}
+tls: {}
   # secretName: "anycable-go-tls-secret"
   # Keep empty to use existing secret
   # crt: ~
