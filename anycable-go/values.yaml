@@ -179,3 +179,7 @@ env:
   #   custom:
   #     NEW_FEATURE: foobar
   custom: {}
+
+global:
+  # In this global you can overload any path defined in the rest of the chart
+  anycableGo: {}

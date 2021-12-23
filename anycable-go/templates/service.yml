@@ -1,26 +1,30 @@
+{{- $values := include "anycableGo.values" . | fromYaml }}
+{{- with ($values.env | default dict) }}
+---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: {{ template "anycableGo.name" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: {{ .Release.Name | quote }}
-    heritage: {{ .Release.Service | quote }}
-  name: {{ template "anycableGo.fullname" . }}
+    app: {{ template "anycableGo.name" $ }}
+    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    release: {{ $.Release.Name | quote }}
+    heritage: {{ $.Release.Service | quote }}
+  name: {{ template "anycableGo.fullname" $ }}
 spec:
   ports:
-  - name: http
-    port: {{ default 80 .Values.env.anycablePort }}
-    protocol: TCP
-    targetPort: http
-  {{- if .Values.env.anycableMetricsPort }}
-  - name: metrics
-    port: {{ .Values.env.anycableMetricsPort }}
-    protocol: TCP
-    targetPort: metrics
-  {{- end }}
+    - name: http
+      port: {{ default 80 .anycablePort }}
+      protocol: TCP
+      targetPort: http
+    {{- if .anycableMetricsPort }}
+    - name: metrics
+      port: {{ .anycableMetricsPort }}
+      protocol: TCP
+      targetPort: metrics
+    {{- end }}
   selector:
-    app: {{ template "anycableGo.name" . }}
+    app: {{ template "anycableGo.name" $ }}
     component: anycable-go
-    release: {{ .Release.Name | quote }}
+    release: {{ $.Release.Name | quote }}
   type: ClusterIP
+{{- end }}
