@@ -157,6 +157,10 @@ spec:
           envFrom:
             - secretRef:
                 name: "{{ template "anycableGo.fullname" $ }}-secrets"
+            {{- range $name := .secrets }}
+            - secretRef:
+                name: {{ $name | quote }}
+            {{- end }}
           image: "{{ .image.repository }}:{{ .image.tag }}"
           imagePullPolicy: {{ .image.pullPolicy | quote }}
           {{- if hasKey $values "livenessProbe" }}
