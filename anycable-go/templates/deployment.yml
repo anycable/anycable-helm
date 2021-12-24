@@ -1,204 +1,129 @@
+{{- $values := include "anycableGo.values" . | fromYaml }}
+{{- with $values }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "anycableGo.fullname" . }}
+  name: {{ template "anycableGo.fullname" $ }}
   labels:
-    app: {{ template "anycableGo.name" . }}
+    app: {{ template "anycableGo.name" $ }}
     component: anycable-go
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: {{ .Release.Name | quote }}
-    heritage: {{ .Release.Service | quote }}
+    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    release: {{ $.Release.Name | quote }}
+    heritage: {{ $.Release.Service | quote }}
 spec:
   progressDeadlineSeconds: 600
-  replicas: {{ default 2 .Values.replicas }}
-  revisionHistoryLimit: {{ default 10 .Values.revisionHistoryLimit }}
+  replicas: {{ .replicas | default 2 }}
+  revisionHistoryLimit: {{ .revisionHistoryLimit | default 10 }}
   selector:
     matchLabels:
-      app: {{ template "anycableGo.name" . }}
+      app: {{ template "anycableGo.name" $ }}
       component: anycable-go
-      release: {{ .Release.Name | quote }}
+      release: {{ $.Release.Name | quote }}
   strategy:
+    {{- with (.rollingUpdate | default dict) }}
     rollingUpdate:
-      maxSurge: {{ default 1 .Values.rollingUpdate.maxSurge }}
-      maxUnavailable: {{ default 1 .Values.rollingUpdate.maxUnavailable }}
+      maxSurge: {{ .maxSurge | default 1 }}
+      maxUnavailable: {{ .maxUnavailable | default 1 }}
     type: RollingUpdate
+    {{- end }}
   template:
     metadata:
       labels:
-        app: {{ template "anycableGo.name" . }}
+        app: {{ template "anycableGo.name" $ }}
         component: anycable-go
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-        release: {{ .Release.Name | quote }}
-        heritage: {{ .Release.Service | quote }}
+        chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+        release: {{ $.Release.Name | quote }}
+        heritage: {{ $.Release.Service | quote }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/env-secret.yml") . | sha256sum }}
-      name: {{ .Release.Name | quote }}
+        checksum/config: {{ include (print $.Template.BasePath "/env-secret.yml") $ | sha256sum }}
+      name: {{ $.Release.Name | quote }}
     spec:
-      {{- if .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- if .nodeSelector }}
+      nodeSelector: {{ toYaml .nodeSelector | nindent 8 }}
       {{- end }}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - podAffinityTerm:
-              topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchLabels:
-                  app: {{ template "anycableGo.name" . }}
-                  release: {{ .Release.Name | quote }}
-            weight: 100
-      {{- if .Values.image.pullSecrets.enabled }}
+            - podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: {{ template "anycableGo.name" $ }}
+                    release: {{ $.Release.Name | quote }}
+              weight: 100
+      {{- if .image.pullSecrets.enabled }}
       imagePullSecrets:
-        - name: "{{ .Release.Name }}-docker-registry-secret"
+        - name: "{{ $.Release.Name }}-docker-registry-secret"
       {{- end }}
       containers:
-      - name: anycable-go
-        ports:
-        - name: http
-          containerPort: {{ required "A valid listening port for anycable is required! Please specify `env.anycablePort` in values!" .Values.env.anycablePort }}
-          protocol: TCP
-        {{- if .Values.env.anycableMetricsPort }}
-        - name: metrics
-          containerPort: {{ .Values.env.anycableMetricsPort }}
-          protocol: TCP
-        {{- end }}
-        env:
-        {{- if .Values.env.anycableHost }}
-        - name: ANYCABLE_HOST
-          value: {{ .Values.env.anycableHost | quote }}
-        {{- end }}
-        - name: ANYCABLE_PORT
-          value: {{ .Values.env.anycablePort | quote }}
-        {{- if .Values.env.anycablePath }}
-        - name: ANYCABLE_PATH
-          value: {{ .Values.env.anycablePath | quote }}
-        {{- end }}
-        {{- if .Values.tls }}
-        - name: ANYCABLE_SSL_CERT
-          value: /etc/ssl/anycable-go/tls.crt
-        - name: ANYCABLE_SSL_KEY
-          value: /etc/ssl/anycable-go/tls.key
-        {{- end }}
-        {{- if .Values.env.anycableRedisChannel }}
-        - name: ANYCABLE_REDIS_CHANNEL
-          value: {{ .Values.env.anycableRedisChannel | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableRedisSentinelDiscoveryInterval }}
-        - name: ANYCABLE_REDIS_SENTINEL_DISCOVERY_INTERVAL
-          value: {{ .Values.env.anycableRedisSentinelDiscoveryInterval | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableRedisKeepaliveInterval }}
-        - name: ANYCABLE_REDIS_KEEPALIVE_INTERVAL
-          value: {{ .Values.env.anycableRedisKeepaliveInterval | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableRpcHost }}
-        - name: ANYCABLE_RPC_HOST
-          value: {{ .Values.env.anycableRpcHost | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableHeaders }}
-        - name: ANYCABLE_HEADERS
-          value: {{ .Values.env.anycableHeaders | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableDisconnectRate }}
-        - name: ANYCABLE_DISCONNECT_RATE
-          value: {{ .Values.env.anycableDisconnectRate | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableLogLevel }}
-        - name: ANYCABLE_LOG_LEVEL
-          value: {{ .Values.env.anycableLogLevel | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableLogFormat }}
-        - name: ANYCABLE_LOG_FORMAT
-          value: {{ .Values.env.anycableLogFormat | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableDebug }}
-        - name: ANYCABLE_DEBUG
-          value: {{ .Values.env.anycableDebug | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsLog }}
-        - name: ANYCABLE_METRICS_LOG
-          value: {{ .Values.env.anycableMetricsLog | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsLogInterval }}
-        - name: ANYCABLE_METRICS_LOG_INTERVAL
-          value: {{ .Values.env.anycableMetricsLogInterval | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsLogFormatter }}
-        - name: ANYCABLE_METRICS_LOG_FORMATTER
-          value: {{ .Values.env.anycableMetricsLogFormatter | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsHttp }}
-        - name: ANYCABLE_METRICS_HTTP
-          value: {{ .Values.env.anycableMetricsHttp | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsHost }}
-        - name: ANYCABLE_METRICS_HOST
-          value: {{ .Values.env.anycableMetricsHost | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMetricsPort }}
-        - name: ANYCABLE_METRICS_PORT
-          value: {{ .Values.env.anycableMetricsPort | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableHealthPath }}
-        - name: ANYCABLE_HEALTH_PATH
-          value: {{ .Values.env.anycableHealthPath | quote }}
-        {{- end }}
-        {{- if .Values.env.anycableMaxMessageSize }}
-        - name: ANYCABLE_MAX_MESSAGE_SIZE
-          value: {{ .Values.env.anycableMaxMessageSize | quote }}
-        {{- end }}
-        envFrom:
-          - secretRef:
-              name: "{{ template "anycableGo.fullname" . }}-secrets"
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
-        {{- if hasKey .Values "livenessProbe" }}
-        livenessProbe: {{ toYaml .Values.livenessProbe | nindent 10 }}
-        {{- else }}
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-            scheme: {{ if .Values.tls }}HTTPS{{ else }}HTTP{{ end }}
-          initialDelaySeconds: 90
-          timeoutSeconds: 3
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
-        {{- end }}
-        {{- if hasKey .Values "readinessProbe" }}
-        readinessProbe: {{ toYaml .Values.readinessProbe | nindent 10 }}
-        {{- else }}
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: http
-            scheme: {{ if .Values.tls }}HTTPS{{ else }}HTTP{{ end }}
-          initialDelaySeconds: 15
-          timeoutSeconds: 3
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
-        {{- end }}
-        {{- if .Values.resources }}
-        resources:
-{{ toYaml .Values.resources | indent 10 }}
-         {{- end }}
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
-        {{- if .Values.tls }}
-        volumeMounts:
-        - name: ssl
-          mountPath: "/etc/ssl/anycable-go"
-          readOnly: true
-        {{- end }}
+        - name: anycable-go
+          {{- with .env }}
+          ports:
+            - name: http
+              containerPort: {{ .anycablePort | required "A valid listening port for anycable is required! Please specify `env.anycablePort` in values!" }}
+              protocol: TCP
+            {{- if .anycableMetricsPort }}
+            - name: metrics
+              containerPort: {{ .anycableMetricsPort }}
+              protocol: TCP
+            {{- end }}
+          {{- end }}
+          envFrom:
+            - secretRef:
+                name: "{{ template "anycableGo.fullname" $ }}-secrets"
+            {{- range $name := .secrets }}
+            - secretRef:
+                name: {{ $name | quote }}
+            {{- end }}
+          image: "{{ .image.repository }}:{{ .image.tag }}"
+          imagePullPolicy: {{ .image.pullPolicy | quote }}
+          {{- if hasKey $values "livenessProbe" }}
+          livenessProbe: {{ toYaml .livenessProbe | nindent 12 }}
+          {{- else }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+              scheme: {{ if .tls }}HTTPS{{ else }}HTTP{{ end }}
+            initialDelaySeconds: 90
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          {{- end }}
+          {{- if hasKey $values "readinessProbe" }}
+          readinessProbe: {{ toYaml .readinessProbe | nindent 12 }}
+          {{- else }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+              scheme: {{ if .tls }}HTTPS{{ else }}HTTP{{ end }}
+            initialDelaySeconds: 15
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          {{- end }}
+          {{- if .resources }}
+          resources: {{ toYaml .resources | nindent 12 }}
+          {{- end }}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          {{- if .tls }}
+          volumeMounts:
+            - name: ssl
+              mountPath: "/etc/ssl/anycable-go"
+              readOnly: true
+          {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
-      {{- if .Values.tls }}
+      {{- if .tls }}
       volumes:
-      - name: ssl
-        secret:
-          secretName: {{ .Values.tls.secretName | quote }}
+        - name: ssl
+          secret:
+            secretName: {{ .tls.secretName | quote }}
       {{- end }}
+{{- end }}

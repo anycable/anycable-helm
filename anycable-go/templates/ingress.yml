@@ -1,5 +1,6 @@
+{{- $values := include "anycableGo.values" . | fromYaml }}
 {{- $apiVersion := include "anycableGo.apiVersions.ingress" $ }}
-{{- with .Values.ingress }}
+{{- with ($values.ingress | default dict) }}
 {{- if ($apiVersion | and .enable | and .nonAcme.hosts) }}
 ---
 apiVersion: "{{ $apiVersion }}"
@@ -12,36 +13,36 @@ metadata:
     {{- end }}
 spec:
   tls:
-{{- range $secret := .nonAcme.hosts }}
-  - hosts:
-{{- range $host := $secret.names }}
-    - {{ $host | quote }}
-{{- end }}
-    secretName: {{ $secret.secretName | quote }}
-{{- end }}
-{{- if (first .nonAcme.hosts | and (first .nonAcme.hosts).names) }}
+    {{- range $secret := .nonAcme.hosts }}
+    - hosts:
+        {{- range $host := $secret.names }}
+        - {{ $host | quote }}
+        {{- end }}
+      secretName: {{ $secret.secretName | quote }}
+    {{- end }}
+  {{- if (first .nonAcme.hosts | and (first .nonAcme.hosts).names) }}
   rules:
-{{- range $secret := .nonAcme.hosts }}
-{{- range $host := $secret.names }}
-{{- $serviceName := include "anycableGo.fullname" $ }}
-  - host: {{ $host | quote }}
-    http:
-      paths:
-        - path: {{ $.Values.ingress.path | quote }}
-          {{- if eq $apiVersion "networking.k8s.io/v1" }}
-          pathType: ImplementationSpecific
-          backend:
-            service:
-              name: {{ $serviceName | quote }}
-              port:
-                name: http
-          {{- else }}
-          backend:
-            serviceName: {{ $serviceName | quote }}
-            servicePort: http
-          {{- end }}
-{{- end }}
-{{- end }}
-{{- end }}
+    {{- range $secret := .nonAcme.hosts }}
+    {{- range $host := $secret.names }}
+    {{- $serviceName := include "anycableGo.fullname" $ }}
+    - host: {{ $host | quote }}
+      http:
+        paths:
+          - path: {{ $values.ingress.path | quote }}
+            {{- if eq $apiVersion "networking.k8s.io/v1" }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $serviceName | quote }}
+                port:
+                  name: http
+            {{- else }}
+            backend:
+              serviceName: {{ $serviceName | quote }}
+              servicePort: http
+            {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 {{- end }}

@@ -35,7 +35,6 @@ ingress:
   #     crt: ""
   #     key: ""
 
-
 revisionHistoryLimit: 10
 
 rollingUpdate:
@@ -51,6 +50,15 @@ resources:
   requests:
     cpu: 350m
     memory: 400Mi
+
+# Define names or additional secrets to overwrite env variables
+# from the `env-secret.yml`.
+# (`ANYCABLE_REDIS_URL`, `ANYCABLE_REDIS_SENTINELS`, etc.)
+#
+# You can add as may different secrets as you need,
+# they will override same env variables in the given order.
+secrets: []
+# - 'custom-secret'
 
 # # You can overwrite probes if needed
 # livenessProbe:
@@ -179,3 +187,7 @@ env:
   #   custom:
   #     NEW_FEATURE: foobar
   custom: {}
+
+global:
+  # In this global you can overload any path defined in the rest of the chart
+  anycableGo: {}

@@ -1,13 +1,20 @@
 {{/* vim: set filetype=mustache: */}}
-{{/*
-Expand the name of the chart.
-*/}}
-{{- define "anycableGo.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+
+{{/* Template to overload .Values with .Values.global.anycableGo */}}
+{{- define "anycableGo.values" -}}
+{{- unset (deepCopy $.Values) "global" | merge (($.Values.global | default dict).anycableGo | default dict) | toYaml }}
 {{- end -}}
 
+{{/* Template to expand the name of the chart */}}
+{{- define "anycableGo.name" -}}
+{{- $values := include "anycableGo.values" . | fromYaml -}}
+{{- default $.Chart.Name $values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/* Template to generate full name of the chart */}}
 {{- define "anycableGo.fullname" -}}
-{{- default (printf "%s-anycable-go" .Release.Name) .Values.fullNameOverride | trunc 63 -}}
+{{- $values := include "anycableGo.values" . | fromYaml -}}
+{{- default (printf "%s-anycable-go" $.Release.Name) $values.fullNameOverride | trunc 63 -}}
 {{- end -}}
 
 {{/* Template to generate apiVersion for ingress */}}
@@ -28,11 +35,10 @@ Expand the name of the chart.
     {{- end -}}
 {{- end }}
 
-{{/*
-Template to generate secrets for a private Docker repository for K8s to use
-*/}}
+{{/* Template to generate secrets for a private Docker repository for K8s to use */}}
 {{- define "anycableGo.imagePullSecrets" }}
-{{- with .Values.image.pullSecrets -}}
+{{- $values := include "anycableGo.values" . | fromYaml -}}
+{{- with $values.image.pullSecrets -}}
 {{- if .enabled }}
 {{- $username := required "image.pullSecrets.username" .username -}}
 {{- $registry := required "image.pullSecrets.registry" .registry -}}
