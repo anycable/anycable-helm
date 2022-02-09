@@ -12,6 +12,9 @@ metadata:
     {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
+  {{- if and (ge $.Capabilities.KubeVersion.Minor 18) (.ingressClassName) }}
+  ingressClassName: {{ .ingressClassName }}
+  {{- end }}
   tls:
     {{- range $secret := .nonAcme.hosts }}
     - hosts:
