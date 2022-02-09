@@ -13,7 +13,7 @@ metadata:
     {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
-  {{- if and (ge $.Capabilities.KubeVersion.Minor 18) (.ingressClassName) }}
+  {{- if and (semverCompare ">=18" $.Capabilities.KubeVersion.Minor) (.ingressClassName) }}
   ingressClassName: {{ .ingressClassName }}
   {{- end }}
   tls:
