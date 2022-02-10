@@ -16,8 +16,8 @@ ingress:
   enable: false
   path: /cable
   annotations: {}
-  ingressClassName: ""
     # nginx.ingress.kubernetes.io/proxy-body-size: "32m"
+  ingressClassName: ""
   acme: {}
     # hosts: []
   nonAcme:
