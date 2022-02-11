@@ -58,6 +58,16 @@ spec:
       {{- end }}
       containers:
         - name: anycable-go
+          {{- if and (hasKey $values "command") (.command) }}
+          command:
+            - {{ .command }}
+          {{- end }}
+          {{- if and (hasKey $values "args") (.args) }}
+          args:
+            {{- range $arg := .args }}
+            - {{ $arg | quote }}
+            {{- end }}
+          {{- end }}
           {{- with .env }}
           ports:
             - name: http
