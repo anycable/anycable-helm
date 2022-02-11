@@ -51,6 +51,11 @@ resources:
     cpu: 350m
     memory: 400Mi
 
+annotations: {}
+
+service:
+  annotations: {}
+
 # Define names or additional secrets to overwrite env variables
 # from the `env-secret.yml`.
 # (`ANYCABLE_REDIS_URL`, `ANYCABLE_REDIS_SENTINELS`, etc.)

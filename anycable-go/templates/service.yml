@@ -9,7 +9,16 @@ metadata:
     chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
     release: {{ $.Release.Name | quote }}
     heritage: {{ $.Release.Service | quote }}
+  {{- if hasKey $values.service "annotations" }}
+    {{- if $values.service.annotations }}
+      {{- range $key, $value := $values.service.annotations }}
+  annotations:
+    {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
   name: {{ template "anycableGo.fullname" $ }}
+
 spec:
   ports:
     - name: http

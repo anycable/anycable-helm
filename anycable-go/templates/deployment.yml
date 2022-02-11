@@ -37,6 +37,11 @@ spec:
         heritage: {{ $.Release.Service | quote }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/env-secret.yml") $ | sha256sum }}
+        {{- if .annotations }}
+        {{- range $key, $value := .annotations }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
       name: {{ $.Release.Name | quote }}
     spec:
       {{- if .nodeSelector }}

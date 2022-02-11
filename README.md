@@ -92,6 +92,13 @@ These are the values used to configure anycable-go itself:
 |**env.anycableDisconnectRate**|Max number of Disconnect calls per second|`100`|
 |**env.anycableMaxMessageSize**|Maximum size of a message in bytes|`` (uses anycable-go default: 65536)|
 
+### Kubernetes
+
+|Value|Description|Default|
+|-----|-----------|-------|
+|**annotations**|User-specified Pod annotations|`{}`|
+|**service.annotations**|User-specified Service annotations|`{}`|
+
 ### Monitoring
 
 |Value|Description|Default|
