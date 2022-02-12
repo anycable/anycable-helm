@@ -56,6 +56,10 @@ annotations: {}
 service:
   annotations: {}
 
+# Use a different ServiceAccount
+# (leave blank for default)
+serviceAccountName: ""
+
 # Define names or additional secrets to overwrite env variables
 # from the `env-secret.yml`.
 # (`ANYCABLE_REDIS_URL`, `ANYCABLE_REDIS_SENTINELS`, etc.)
