@@ -58,11 +58,11 @@ spec:
       {{- end }}
       containers:
         - name: anycable-go
-          {{- if and (hasKey $values "command") (.command) }}
+          {{- if .command }}
           command:
-            - {{ .command }}
+            - {{ .command | quote }}
           {{- end }}
-          {{- if and (hasKey $values "args") (.args) }}
+          {{- if .args }}
           args:
             {{- range $arg := .args }}
             - {{ $arg | quote }}
