@@ -37,15 +37,13 @@ spec:
         heritage: {{ $.Release.Service | quote }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/env-secret.yml") $ | sha256sum }}
-        {{- if .annotations }}
-        {{- range $key, $value := .annotations }}
-        {{ $key }}: {{ $value | quote }}
-        {{- end }}
+        {{- if (.pod | default dict).annotations }}
+        {{- .pod.annotations | toYaml | nindent 8 }}
         {{- end }}
       name: {{ $.Release.Name | quote }}
     spec:
-      {{- if .serviceAccountName }}
-      serviceAccountName: {{ .serviceAccountName }}
+      {{- if (.pod | default dict).serviceAccountName }}
+      serviceAccountName: {{ pod.serviceAccountName }}
       {{- end }}
       {{- if .nodeSelector }}
       nodeSelector: {{ toYaml .nodeSelector | nindent 8 }}

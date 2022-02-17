@@ -96,9 +96,9 @@ These are the values used to configure anycable-go itself:
 
 |Value|Description|Default|
 |-----|-----------|-------|
-|**annotations**|User-specified Pod annotations|`{}`|
+|**pod.annotations**|User-specified Pod annotations|`{}`|
+|**pod.serviceAccountName**|User-specified ServiceAccount for Pod identity||
 |**service.annotations**|User-specified Service annotations|`{}`|
-|**serviceAccountName**|User-specified ServiceAccount for Pod identity||
 
 ### Monitoring
 

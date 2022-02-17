@@ -51,14 +51,15 @@ resources:
     cpu: 350m
     memory: 400Mi
 
-annotations: {}
+pod:
+  annotations: {}
+
+  # Use a different ServiceAccount
+  # (leave blank for default)
+  serviceAccountName: ""
 
 service:
   annotations: {}
-
-# Use a different ServiceAccount
-# (leave blank for default)
-serviceAccountName: ""
 
 # Define names or additional secrets to overwrite env variables
 # from the `env-secret.yml`.
