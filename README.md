@@ -91,6 +91,8 @@ These are the values used to configure anycable-go itself:
 |**env.anycableHeaders**|List of headers to proxy to RPC|`cookie`|
 |**env.anycableDisconnectRate**|Max number of Disconnect calls per second|`100`|
 |**env.anycableMaxMessageSize**|Maximum size of a message in bytes|`` (uses anycable-go default: 65536)|
+|**command**|Override entrypoint for Alpine images|`/usr/local/bin/anycable-go`
+|**args**|Customize ARGV (in addition to `env` settings above)|`[]`|
 
 ### Monitoring
 
