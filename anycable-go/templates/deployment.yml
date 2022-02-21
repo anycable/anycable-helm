@@ -43,7 +43,7 @@ spec:
       name: {{ $.Release.Name | quote }}
     spec:
       {{- if (.pod | default dict).serviceAccountName }}
-      serviceAccountName: {{ pod.serviceAccountName }}
+      serviceAccountName: {{ .pod.serviceAccountName }}
       {{- end }}
       {{- if .nodeSelector }}
       nodeSelector: {{ toYaml .nodeSelector | nindent 8 }}
