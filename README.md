@@ -94,6 +94,14 @@ These are the values used to configure anycable-go itself:
 |**command**|Override entrypoint for Alpine images|`/usr/local/bin/anycable-go`
 |**args**|Customize ARGV (in addition to `env` settings above)|`[]`|
 
+### Kubernetes
+
+|Value|Description|Default|
+|-----|-----------|-------|
+|**pod.annotations**|User-specified Pod annotations|`{}`|
+|**pod.serviceAccountName**|User-specified ServiceAccount for Pod identity||
+|**service.annotations**|User-specified Service annotations|`{}`|
+
 ### Monitoring
 
 |Value|Description|Default|
