@@ -224,21 +224,15 @@ tls:
 
  1. Clone this repository
 
- 2. Create git worktree for `gh-pages` branch:
+ 2. Update your chart, bump version in its `Chart.yaml`
 
-    ```sh
-    make prepare
-    ```
-
- 3. Update your chart, bump version in its `Chart.yaml`
-
- 4. Lint you chart:
+ 3. Lint you chart:
 
     ```sh
     helm lint anycable-go
     ```
 
- 5. Commit and push your changes:
+ 4. Commit and push your changes:
 
     ```sh
     git commit -m "anycable-go: vX.Y.Z"
@@ -246,10 +240,4 @@ tls:
     git push --follow-tags
     ```
 
- 6. Build and publish charts into repository:
-
-    ```sh
-    make release
-    ```
-
- 7. Enjoy!
+ 5. Enjoy!

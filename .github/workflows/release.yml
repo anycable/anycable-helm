@@ -1,0 +1,34 @@
+---
+name: release-helm-chart
+on:
+  push:
+    tags:
+    - '*'
+jobs:
+  release-helm-chart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull the master branch
+        uses: actions/checkout@v2
+        with:
+          path: chart/
+      - name: Pull the gh-pages branch
+        uses: actions/checkout@v2
+        with:
+          path: repository/
+          ref: gh-pages
+      - uses: azure/setup-helm@v1
+      - name: Pack the current chart version
+        run:  helm package -d repository/ chart/anycable-go
+      - name: Reindex Helm repository
+        run: >-
+          helm repo index
+          --url https://helm.anycable.io/
+          --merge repository/index.yaml
+          repository/
+      - name: Deploy pages
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          build_dir: repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
