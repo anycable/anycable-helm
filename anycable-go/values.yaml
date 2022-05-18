@@ -4,7 +4,7 @@ replicas: 1
 
 image:
   repository: anycable/anycable-go
-  tag: 1.1.2
+  tag: 1.2.0
   pullPolicy: IfNotPresent
   pullSecrets:
     enabled: false
@@ -132,6 +132,18 @@ env:
   # WebSocket endpoint path
   anycablePath: "/cable"
 
+  # Broadcasting adapter to use (redis or http), default: redis
+  anycableBroadcastAdapter: "redis"
+
+  # HTTP pub/sub endpoint path
+  anycableHttpBroadcastPath: "/_broadcast"
+
+  # Which port to receive broadcasting requests
+  anycableHttpBroadcastPort: "8090"
+
+  # Authorization secret to protect the broadcasting endpoint
+  anycableHttpBroadcastSecret: ""
+
   # Redis db url
   anycableRedisUrl: "redis://localhost:6379/5"
 
@@ -145,7 +157,10 @@ env:
   anycableRedisSentinelDiscoveryInterval: "30"
 
   # Interval to periodically ping Redis to make sure it's alive, default: 30
-  anycableRedisKeepaliveInterval: ""
+  anycableRedisKeepaliveInterval: "30"
+
+  # Max number of concurrent RPC request; should be slightly less than the RPC server concurrency, default: 28
+  anycableRpcConcurrency: "28"
 
   # RPC service address
   anycableRpcHost: "localhost:50051"
@@ -188,6 +203,66 @@ env:
 
   # Maximum size of a message in bytes, default: 65536
   anycableMaxMessageSize: ""
+
+  # Limit simultaneous server connections (0 – without limit), default: 0
+  anycableMaxConn: "0"
+
+  # Enable client-side TLS with the RPC server, default: false
+  anycableRpcEnableTls: "false"
+
+  # Override default MaxCallRecvMsgSize for RPC client (bytes), default: none
+  anycableRpcMaxCallRecvSize: ""
+
+  # Override default MaxCallSendMsgSize for RPC client (bytes), default: none
+  anycableRpcMaxCallSendSize: ""
+
+  # Graceful shutdown timeouts (in seconds), default: 5
+  anycableDisconnectTimeout: "5"
+
+  # Disable calling Disconnect callback, default: false
+  anycableDisableDisconnect: "false"
+
+  # Specify how often flush metrics to writers (logs, statsd) (in seconds), default: 15
+  anycableMetricsRotateInterval: "15"
+
+  # WebSocket connection read buffer size, default: 1024
+  anycableReadBufferSize: "1024"
+
+  # WebSocket connection write buffer size, default: 1024
+  anycableWriteBufferSize: "1024"
+
+  # Enable experimental WebSocket per message compression, default: false
+  anycableEnableWsCompression: "false"
+
+  # The size of the goroutines pool to broadcast messages, default: 16
+  anycableHubGopoolSize: "16"
+
+  # Accept requests only from specified origins. No check is performed if empty, default: ""
+  anycableAllowedOrigins: ""
+
+  # Action Cable ping interval (in seconds), default: 3
+  anycablePingInterval: "3"
+
+  # Precision for timestamps in ping messages (s, ms, ns), default: s
+  anycablePingTimestampPrecision: "s"
+
+  # How often to refresh the server stats (in seconds), default: 5
+  anycableStatsRefreshInterval: "5"
+
+  # The encryption key used to verify JWT tokens, default: "" (disabled)
+  anycableJwtIdKey: ""
+
+  # The name of a query string param or an HTTP header carrying a token, default: "jid" ("X-JID")
+  anycableJwtIdParam: "jid"
+
+  # Whether to enforce token presence for all connections, default: false
+  anycableJwtIdEnforce: "false"
+
+  # Enable Turbo Streams fastlane with the specified signing key, default: "" (disabled)
+  anycableTurboRailsKey: ""
+
+  # Enable CableReady fastlane with the specified signing key, default: "" (disabled)
+  anycableCableReadyKey: ""
 
   # Under this key you can define custom env variables (for example,
   # to support new anycable features, not added to the chart yet).
