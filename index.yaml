@@ -14,5 +14,5 @@ entries:
     - https://github.com/CareMessagePlatform/anycable-helm
     urls:
     - https://storage.googleapis.com/caremessage-rpms/cm-anycable-go.tgz
-    version: 0.1.0
+    version: 0.1.1
 generated: "2020-05-28T17:35:59.547424012+03:00"
