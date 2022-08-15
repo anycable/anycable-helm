@@ -173,5 +173,5 @@ spec:
       volumes:
       - name: certificates-secret-volume
         secret:
-          secretName: caremessage-secrets-certificates
+          secretName: {{ .Values.certSecret }}
       terminationGracePeriodSeconds: 30
