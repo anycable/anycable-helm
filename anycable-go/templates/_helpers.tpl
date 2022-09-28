@@ -17,6 +17,24 @@
 {{- default (printf "%s-anycable-go" $.Release.Name) $values.fullNameOverride | trunc 63 -}}
 {{- end -}}
 
+{{/* Template to generate apiVersion for HPA */}}
+{{- define "anycableGo.apiVersions.hpa" }}
+    {{- $kubeVersion := $.Capabilities.KubeVersion.Version }}
+    {{- $apiVersions := $.Capabilities.APIVersions }}
+
+    {{- if $kubeVersion | semverCompare ">=1.26.0-0" -}}
+        {{- "autoscaling/v2" -}}
+    {{- else if $kubeVersion | semverCompare ">=1.23.0-0" | and ($apiVersions.Has "autoscaling/v2") -}}
+        {{- "autoscaling/v2" -}}
+    {{- else if $kubeVersion | semverCompare ">=1.12.0-0" | and ($apiVersions.Has "autoscaling/v2beta2") -}}
+        {{- "autoscaling/v2beta2" -}}
+    {{- else if $apiVersions.Has "autoscaling/v2beta1" }}
+        {{- "autoscaling/v2beta1" -}}
+    {{- else }}
+        {{- "autoscaling/v1" -}}
+    {{- end -}}
+{{- end -}}
+
 {{/* Template to generate apiVersion for ingress */}}
 {{- define "anycableGo.apiVersions.ingress" }}
     {{- $kubeVersion := $.Capabilities.KubeVersion.Version }}
