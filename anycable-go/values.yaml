@@ -60,6 +60,7 @@ pod:
 
 service:
   annotations: {}
+  type: ClusterIP
 
 # Define names or additional secrets to overwrite env variables
 # from the `env-secret.yml`.
