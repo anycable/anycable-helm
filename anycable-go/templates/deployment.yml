@@ -99,7 +99,7 @@ spec:
           {{- else }}
           livenessProbe:
             httpGet:
-              path: /health
+              path: {{ .env.anycableHealthPath }}
               port: http
               scheme: {{ if .tls }}HTTPS{{ else }}HTTP{{ end }}
             initialDelaySeconds: 90
@@ -113,7 +113,7 @@ spec:
           {{- else }}
           readinessProbe:
             httpGet:
-              path: /health
+              path: {{ .env.anycableHealthPath }}
               port: http
               scheme: {{ if .tls }}HTTPS{{ else }}HTTP{{ end }}
             initialDelaySeconds: 15
