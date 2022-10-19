@@ -1,0 +1,23 @@
+{{- $values := include "anycableGo.values" . | fromYaml }}
+{{- with $values.hpa }}
+{{- if .enabled }}
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "anycableGo.fullname" $ }}
+  labels:
+    app: {{ template "anycableGo.name" $ }}
+    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    release: {{ $.Release.Name | quote }}
+    heritage: {{ $.Release.Service | quote }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "anycableGo.fullname" $ }}
+  minReplicas: {{ .minReplicas }}
+  maxReplicas: {{ .maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .targetCPUUtilizationPercentage }}
+{{- end }}
+{{- end }}

@@ -13,7 +13,9 @@ metadata:
     heritage: {{ $.Release.Service | quote }}
 spec:
   progressDeadlineSeconds: 600
+  {{- if eq .hpa.enabled false }}
   replicas: {{ .replicas | default 2 }}
+  {{- end }}
   revisionHistoryLimit: {{ .revisionHistoryLimit | default 10 }}
   selector:
     matchLabels:
