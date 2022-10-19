@@ -1,8 +1,9 @@
 {{- $values := include "anycableGo.values" . | fromYaml }}
 {{- with $values.hpa }}
 {{- if .enabled }}
+{{- $apiVersion := include "anycableGo.apiVersions.hpa" $ }}
 ---
-apiVersion: autoscaling/v1
+apiVersion: {{ $apiVersion }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "anycableGo.fullname" $ }}
