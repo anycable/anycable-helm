@@ -11,11 +11,11 @@ keywords:
 sources:
   - https://github.com/anycable/anycable-go
 maintainers:
-  - name: gfrntz
-    email: takebsd@gmail.com
   - name: dragonsmith
     email: agon.smith@gmail.com
   - name: palkan
     email: dementiev.vm@gmail.com
   - name: envek
     email: envek@envek.name
+  - name: nepalez
+    email: nepalez@evilmartians.com
