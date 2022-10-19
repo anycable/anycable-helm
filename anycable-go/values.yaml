@@ -7,7 +7,7 @@ hpa:
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 50
-    
+
 image:
   repository: anycable/anycable-go
   tag: 1.2.0
