@@ -10,7 +10,7 @@ hpa:
 
 image:
   repository: anycable/anycable-go
-  tag: 1.2.0
+  tag: 1.2.4
   pullPolicy: IfNotPresent
   pullSecrets:
     enabled: false
