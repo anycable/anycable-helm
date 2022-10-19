@@ -105,6 +105,7 @@ These are the values used to configure anycable-go itself:
 |**hpa.targetCPUUtilizationPercentage**|Target CPU utilization for HPA|`50`|
 |**pod.annotations**|User-specified Pod annotations|`{}`|
 |**pod.extraLabels**|User-specified Pod Labels|`{}`|
+|**pod.tolerations**|User-specified Pod tolerations|`[]`|
 |**pod.serviceAccountName**|User-specified ServiceAccount for Pod identity||
 |**service.annotations**|User-specified Service annotations|`{}`|
 

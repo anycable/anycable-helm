@@ -63,6 +63,13 @@ pod:
   # Use a different ServiceAccount
   # (leave blank for default)
   serviceAccountName: ""
+  # Add tolerations to pods
+  tolerations: []
+    # - key: key1
+    #   operator: Equal
+    #   value: value1
+    #   effect: NoExecute
+    #   tolerationSeconds: 3600
 
 service:
   annotations: {}
