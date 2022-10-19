@@ -2,9 +2,15 @@ nodeSelector: {}
 
 replicas: 1
 
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 50
+
 image:
   repository: anycable/anycable-go
-  tag: 1.2.0
+  tag: 1.2.4
   pullPolicy: IfNotPresent
   pullSecrets:
     enabled: false
@@ -53,13 +59,21 @@ resources:
 
 pod:
   annotations: {}
-
+  extraLabels: {}
   # Use a different ServiceAccount
   # (leave blank for default)
   serviceAccountName: ""
+  # Add tolerations to pods
+  tolerations: []
+    # - key: key1
+    #   operator: Equal
+    #   value: value1
+    #   effect: NoExecute
+    #   tolerationSeconds: 3600
 
 service:
   annotations: {}
+  type: ClusterIP
 
 # Define names or additional secrets to overwrite env variables
 # from the `env-secret.yml`.

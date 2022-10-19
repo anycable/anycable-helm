@@ -98,7 +98,14 @@ These are the values used to configure anycable-go itself:
 
 |Value|Description|Default|
 |-----|-----------|-------|
+|**replicas**|Number of replicas for `anycable-go` deployment (ignored when HPA is enabled)|`1`|
+|**hpa.enabled**|Enable HorizontalPodAutoscaler|`false`|
+|**hpa.minReplicas**|Minimum replicas for HPA|`1`|
+|**hpa.maxReplicas**|Maximum replicas for HPA|`3`|
+|**hpa.targetCPUUtilizationPercentage**|Target CPU utilization for HPA|`50`|
 |**pod.annotations**|User-specified Pod annotations|`{}`|
+|**pod.extraLabels**|User-specified Pod Labels|`{}`|
+|**pod.tolerations**|User-specified Pod tolerations|`[]`|
 |**pod.serviceAccountName**|User-specified ServiceAccount for Pod identity||
 |**service.annotations**|User-specified Service annotations|`{}`|
 

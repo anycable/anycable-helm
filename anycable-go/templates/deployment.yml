@@ -13,7 +13,9 @@ metadata:
     heritage: {{ $.Release.Service | quote }}
 spec:
   progressDeadlineSeconds: 600
+  {{- if eq .hpa.enabled false }}
   replicas: {{ .replicas | default 2 }}
+  {{- end }}
   revisionHistoryLimit: {{ .revisionHistoryLimit | default 10 }}
   selector:
     matchLabels:
@@ -35,6 +37,9 @@ spec:
         chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
         release: {{ $.Release.Name | quote }}
         heritage: {{ $.Release.Service | quote }}
+        {{- if (.pod | default dict).extraLabels }}
+        {{- .pod.extraLabels | toYaml | nindent 8 }}
+        {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/env-secret.yml") $ | sha256sum }}
         {{- if (.pod | default dict).annotations }}
@@ -58,6 +63,9 @@ spec:
                     app: {{ template "anycableGo.name" $ }}
                     release: {{ $.Release.Name | quote }}
               weight: 100
+      {{- if (.pod | default dict).tolerations }}
+      tolerations: {{- .pod.tolerations | toYaml | nindent 8 }}
+      {{- end }}
       {{- if .image.pullSecrets.enabled }}
       imagePullSecrets:
         - name: "{{ $.Release.Name }}-docker-registry-secret"
