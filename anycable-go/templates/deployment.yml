@@ -35,6 +35,9 @@ spec:
         chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
         release: {{ $.Release.Name | quote }}
         heritage: {{ $.Release.Service | quote }}
+        {{- if (.pod | default dict).extraLabels }}
+        {{- .pod.extraLabels | toYaml | nindent 8 }}
+        {{- end }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/env-secret.yml") $ | sha256sum }}
         {{- if (.pod | default dict).annotations }}

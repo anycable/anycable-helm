@@ -53,7 +53,7 @@ resources:
 
 pod:
   annotations: {}
-
+  extraLabels: {}
   # Use a different ServiceAccount
   # (leave blank for default)
   serviceAccountName: ""
