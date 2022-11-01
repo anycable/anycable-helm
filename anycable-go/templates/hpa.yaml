@@ -19,6 +19,14 @@ spec:
     name: {{ template "anycableGo.fullname" $ }}
   minReplicas: {{ .minReplicas }}
   maxReplicas: {{ .maxReplicas }}
+  {{- if eq $apiVersion "autoscaling/v1" }}
   targetCPUUtilizationPercentage: {{ .targetCPUUtilizationPercentage }}
+  {{- else }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .targetCPUUtilizationPercentage }}
+  {{- end }}
 {{- end }}
 {{- end }}
