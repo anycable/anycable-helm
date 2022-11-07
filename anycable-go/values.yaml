@@ -6,6 +6,7 @@ hpa:
   enabled: false
   minReplicas: 1
   maxReplicas: 3
+  # ATTENTION: This argument will be renamed in the future.
   targetCPUUtilizationPercentage: 50
 
 image:
