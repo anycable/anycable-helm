@@ -13,6 +13,9 @@ metadata:
     {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
+  {{- if .className }}
+  ingressClassName: {{ .className }}
+  {{- end }}
   tls:
     - hosts:
         {{- range $host := .acme.hosts }}
