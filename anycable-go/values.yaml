@@ -21,6 +21,7 @@ image:
 
 ingress:
   enable: false
+  className: ""
   path: /cable
   annotations: {}
     # nginx.ingress.kubernetes.io/proxy-body-size: "32m"
