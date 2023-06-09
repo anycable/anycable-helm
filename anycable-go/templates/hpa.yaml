@@ -21,7 +21,7 @@ spec:
   maxReplicas: {{ .maxReplicas }}
   {{- if eq $apiVersion "autoscaling/v1" }}
   targetCPUUtilizationPercentage: {{ .targetCPUUtilizationPercentage }}
-  {{- else if eq $apiVersion "autoscaling/v2" }}
+  {{- else if or (eq $apiVersion "autoscaling/v2") (eq $apiVersion "autoscaling/v2beta2") }}
   metrics:
     - type: Resource
       resource:
