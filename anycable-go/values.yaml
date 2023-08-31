@@ -185,7 +185,7 @@ env:
   anycableHeaders: "cookie"
 
   # Max number of Disconnect calls per second
-  anycableDisconnectRate: "100"
+  anycableDisconnectRate: 100
 
   # Set logging level (debug/info/warn/error/fatal)
   anycableLogLevel: "info"
