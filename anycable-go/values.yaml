@@ -11,7 +11,7 @@ hpa:
 
 image:
   repository: anycable/anycable-go
-  tag: 1.2.3
+  tag: 1.4.1
   pullPolicy: IfNotPresent
   pullSecrets:
     enabled: false
@@ -279,6 +279,15 @@ env:
 
   # Enable CableReady fastlane with the specified signing key, default: "" (disabled)
   anycableCableReadyKey: ""
+
+  # Whether to validate Redis server TLS certificate if rediss:// protocol is used (default: false).
+  anycableRedisTlsVerify: ~
+
+  # Path to file with client TLS certificate in PEM format if Redis server requires client authentication.
+  anycableRedisTlsClientCertPath: ~
+
+  # Path to file with private key for client TLS certificate if Redis server requires client authentication.
+  anycableRedisTlsClientKeyPath: ~
 
   # Under this key you can define custom env variables (for example,
   # to support new anycable features, not added to the chart yet).

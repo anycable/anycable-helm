@@ -85,6 +85,9 @@ These are the values used to configure anycable-go itself:
 |**env.anycableRedisUrl**|Redis DB url|`redis://localhost:6379/5`|
 |**env.anycableRedisKeepaliveInterval**|Interval to periodically ping Redis to make sure it's alive||
 |**env.anycableRedisChannel**|Redis channel for broadcasts|`__anycable__`|
+|**env.anycableRedisTlsVerify**|Whether to validate Redis server TLS certificate if `rediss://` protocol is used|`false`|
+|**env.anycableRedisTlsClientCertPath**|Path to file with client TLS certificate in PEM format if Redis server requires client authentication.||
+|**env.anycableRedisTlsClientKeyPath**|Path to file with private key for client TLS certificate if Redis server requires client authentication.||
 |**env.anycableRedisSentinels**|Comma separated list of sentinel hosts, format: `:password@host:port,…`||
 |**env.anycableRedisSentinelDiscoveryInterval**|Interval to rediscover sentinels in seconds|`30`|
 |**env.anycableRpcHost**|RPC service address|`localhost:50051`|
