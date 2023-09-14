@@ -11,16 +11,13 @@ jobs:
   check-helm-chart:
     runs-on: ubuntu-latest
     steps:
-      - id: checkout-anycable-helm
-        name: Checkout anycable-helm
+      - name: Checkout anycable-helm
         uses: actions/checkout@v4
         with:
           path: anycable-helm/
 
-      - id: setup-helm
-        name: Setup Helm
+      - name: Setup Helm
         uses: azure/setup-helm@v3
 
-      - id: run-linter
-        name: Run Helm Linter
+      - name: Run Helm Linter
         run: helm lint anycable-helm/anycable-go
