@@ -22,3 +22,5 @@ jobs:
       - id: run-linter
         name: Run Helm Linter
         run: helm lint anycable-go
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
