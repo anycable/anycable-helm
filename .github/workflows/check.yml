@@ -14,10 +14,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: anycable-helm/
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - id: setup-helm
         name: Setup Helm
         uses: azure/setup-helm@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - id: run-linter
         name: Run Helm Linter
