@@ -30,7 +30,7 @@ jobs:
       - id: pack-chart-version
         name: Pack the current chart version
         needs:
-          - checkout-repository
+          - setup-helm
           - prepare-gh-pages
         run: helm package -d helm-repository/ anycable-helm/anycable-go/
 
