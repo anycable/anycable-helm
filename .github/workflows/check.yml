@@ -4,6 +4,8 @@ on:
     branches:
       - master
   pull_request:
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   check-helm-chart:
@@ -14,17 +16,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: anycable-helm/
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - id: setup-helm
         name: Setup Helm
         uses: azure/setup-helm@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - id: run-linter
         name: Run Helm Linter
         run: helm lint anycable-helm/anycable-go
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

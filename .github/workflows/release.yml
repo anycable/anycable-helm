@@ -3,12 +3,14 @@ on:
   push:
     tags:
       - '*'
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   release-helm-chart:
     runs-on: ubuntu-latest
     steps:
-      - id: checkout-anycable-helm
+      - id: checkout-repository
         name: Checkout anycable-helm
         uses: actions/checkout@v4
         with:
@@ -18,9 +20,9 @@ jobs:
         name: Setup Helm
         uses: azure/setup-helm@v3
 
-      - id: prepare-helm-repository
+      - id: prepare-gh-pages
         uses: actions/checkout@v4
-        needs: checkout-anycable-helm
+        needs: checkout-repository
         with:
           path: helm-repository/
           ref: gh-pages
@@ -28,7 +30,7 @@ jobs:
       - id: pack-chart-version
         name: Pack the current chart version
         needs:
-          - checkout-anycable-helm
+          - checkout-repository
           - prepare-gh-pages
         run: helm package -d helm-repository/ anycable-helm/anycable-go/
 
