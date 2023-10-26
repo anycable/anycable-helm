@@ -160,7 +160,7 @@ env:
   anycableMetricsLog: ""
 
   # Specify how often flush metrics logs (in seconds)
-  anycableMetricsLogInterval: "15"
+  anycableMetricsRotateInterval: "15"
 
   # Specify the path to custom Ruby formatter script (only supported on MacOS and Linux)
   anycableMetricsLogFormatter: ""
