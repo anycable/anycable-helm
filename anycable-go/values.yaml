@@ -286,7 +286,10 @@ env:
   # Enable metrics logging (with info level)
   anycableMetricsLog: ""
 
-  # Specify how often flush metrics logs (in seconds)
+  # Specify how often flush metrics to writers (logs, statsd) (in seconds), default: 15
+  anycableMetricsRotateInterval: "15"
+
+  # [DEPRECATED] Specify how often flush metrics logs. Use anycableMetricsRotateInterval instead
   anycableMetricsLogInterval: "15"
 
   # Specify the path to custom Ruby formatter script (only supported on MacOS and Linux)
@@ -351,9 +354,6 @@ env:
 
   # [DEPRECATED] Disable calling Disconnect callback. Use anycableDisconnectMode=never instead.
   anycableDisableDisconnect: "false"
-
-  # Specify how often flush metrics to writers (logs, statsd) (in seconds), default: 15
-  anycableMetricsRotateInterval: "15"
 
   # WebSocket connection read buffer size, default: 1024
   anycableReadBufferSize: "1024"
