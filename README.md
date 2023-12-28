@@ -79,21 +79,80 @@ These are the values used to configure anycable-go itself:
 |**image.pullSecrets.registry**|URL of a private registry you want to authorize to|`ghcr.io`|
 |**image.pullSecrets.username**|Github username|``|
 |**image.pullSecrets.password**|Github token|``|
-|**env.anycableHost**|Listen ip address or host|`0.0.0.0`|
+|**env.anycableHost**|Listen IP address or host|`0.0.0.0`|
 |**env.anycablePort**|Listen port number|`8080`|
-|**env.anycablePath**|WebSocket endpoint path|`/cable`|
+|**env.anycablePath**|WebSocket endpoint path (you can specify multiple paths using a comma as separator)|`/cable`|
+|**env.anycableBroadcastAdapter**|Broadcasting adapter to use: redis, http, redisx or nats (multiple are allowed via a comma-separated list)|`redis`|
+|**env.anycableHttpBroadcastPath**|HTTP pub/sub endpoint path|`/_broadcast`|
+|**env.anycableHttpBroadcastPort**|Port to receive broadcasting requests|`8090`|
+|**env.anycableHttpBroadcastSecret**|Authorization secret to protect the broadcasting endpoint||
 |**env.anycableRedisUrl**|Redis DB url|`redis://localhost:6379/5`|
-|**env.anycableRedisKeepaliveInterval**|Interval to periodically ping Redis to make sure it's alive||
 |**env.anycableRedisChannel**|Redis channel for broadcasts|`__anycable__`|
-|**env.anycableRedisTlsVerify**|Whether to validate Redis server TLS certificate if `rediss://` protocol is used|`false`|
-|**env.anycableRedisTlsClientCertPath**|Path to file with client TLS certificate in PEM format if Redis server requires client authentication.||
-|**env.anycableRedisTlsClientKeyPath**|Path to file with private key for client TLS certificate if Redis server requires client authentication.||
-|**env.anycableRedisSentinels**|Comma separated list of sentinel hosts, format: `:password@host:port,…`||
+|**env.anycableRedisSentinels**|Comma-separated list of sentinel hosts, format: `:password@hostname:port,..`||
 |**env.anycableRedisSentinelDiscoveryInterval**|Interval to rediscover sentinels in seconds|`30`|
+|**env.anycableRedisKeepaliveInterval**|Interval to periodically ping Redis to make sure it's alive|`30`|
+|**env.anycableRedisTlsVerify**|Whether to validate Redis server TLS certificate if rediss:// protocol is used|`false`|
+|**env.anycableRedisTlsClientCertPath**|Path to file with client TLS certificate in PEM format if Redis server requires client authentication||
+|**env.anycableRedisTlsClientKeyPath**|Path to file with private key for client TLS certificate if Redis server requires client authentication||
+|**env.anycableRpcConcurrency**|Max number of concurrent RPC request; should be slightly less than the RPC server concurrency|`28`|
 |**env.anycableRpcHost**|RPC service address|`localhost:50051`|
+|**env.anycableRpcEnableTls**|Enable client-side TLS with the RPC server|`false`|
+|**env.anycableRpcTlsVerify**|Whether to verify the RPC server certificate|`true`|
+|**env.anycableRpcTlsRootCa**|CA root certificate file path or contents in PEM format|If not set, system CAs will be used|
+|**env.anycableRpcMaxCallRecvSize**|Override default MaxCallRecvMsgSize for RPC client (bytes)||
+|**env.anycableRpcMaxCallSendSize**|Override default MaxCallSendMsgSize for RPC client (bytes)||
+|**env.anycableRpcImpl**|RPC implementation (grpc, http)||If not set, infer RPC implementation from RPC host
+|**env.anycableHttpRpcSecret**|Authentication secret for RPC over HTTP||
+|**env.anycableHttpRpcTimeout**|HTTP RPC timeout (in ms)|`3000`|
 |**env.anycableHeaders**|List of headers to proxy to RPC|`cookie`|
+|**env.anycableProxyCookies**|Cookie keys to send to RPC, default is all||
+|**env.anycablePresets**|Configuration presets, comma-separated (none, fly, heroku, broker)|Inferred automatically if possible|
+|**env.anycableBroker**|Broker engine to use (none, memory, nats, redis)|``|
+|**env.anycableHistoryLimit**|Max number of messages to keep in the stream's history|`100`|
+|**env.anycableHistoryTtl**|TTL for messages in stream's history (seconds)|`300`|
+|**env.anycableSessionsTtl**|TTL for expired/disconnected sessions (seconds)|`300`|
+|**env.anycablePubsub**|Pub/Sub adapter to use (none, redis, nats)|``|
+|**env.anycableNatsServers**|Comma-separated list of NATS cluster servers|`nats://localhost:4222`|
+|**env.anycableNatsChannel**|NATS channel for broadcasts|`__anycable__`|
+|**env.anycableNatsDontRandomizeServers**|Disable NATS servers randomization during (re-)connect|`false`|
+|**env.anycableEmbedNats**|Enable embedded NATS server and use it for pub/sub||
+|**env.anycableEnatsAddr**|NATS server bind address|`nats://localhost:4222`|
+|**env.anycableEnatsCluster**|NATS cluster service bind address||
+|**env.anycableEnatsClusterName**|NATS cluster name|`anycable-cluster`|
+|**env.anycableEnatsClusterRoutes**|Comma-separated list of known cluster addresses||
+|**env.anycableEnatsGateway**|NATS gateway bind address||
+|**env.anycableEnatsGateways**|Semicolon-separated list of known gateway configurations||
+|**env.anycableEnatsGatewayAdvertise**|NATS gateway advertise address||
+|**env.anycableEnatsStoreDir**|Embedded NATS store directory for JetStream|If not set, auto-generated in the temp dir|
+|**env.anycableEnatsServerName**|Embedded NATS unique server name|If not set, auto-generated|
+|**env.anycableEnatsDebug**|Enable NATS server logs||
+|**env.anycableEnatsTrace**|Enable NATS server protocol trace logs||
+|**env.anycableMaxMessageSize**|Maximum size of a message in bytes|`65536`|
+|**env.anycableMaxConn**|Limit simultaneous server connections|`0` (no limit)|
+|**env.anycableShutdownTimeout**|Graceful shutdown timeout (in seconds)|`30`|
+|**env.anycableDisconnectTimeout**|[DEPRECATED] Graceful shutdown timeout (in seconds). Use `env.anycableShutdownTimeout` instead|`5`|
 |**env.anycableDisconnectRate**|Max number of Disconnect calls per second|`100`|
-|**env.anycableMaxMessageSize**|Maximum size of a message in bytes|`` (uses anycable-go default: 65536)|
+|**env.anycableShutdownPoolSize**|Number of goroutines to use for disconnect calls on shutdown|`16`|
+|**env.anycableDisconnectBacklogSize**|Size of the channel's buffer for disconnect requests|`4096`|
+|**env.anycableDisconnectMode**|Define when to call Disconnect callback: auto, always, never|`auto`|
+|**env.anycableDisableDisconnect**|[DEPRECATED] Disable calling Disconnect callback. Use `env.anycableDisconnectMode=never` instead|`false`|
+|**env.anycableReadBufferSize**|WebSocket connection read buffer size|`1024`|
+|**env.anycableWriteBufferSize**|WebSocket connection write buffer size|`1024`|
+|**env.anycableEnableWsCompression**|Enable WebSocket per message compression|`false`|
+|**env.anycableHubGopoolSize**|Size of the goroutines pool to broadcast messages|`16`|
+|**env.anycableAllowedOrigins**|Accept requests only from specified origins. No check is performed if empty||
+|**env.anycablePingInterval**|Action Cable ping interval (in seconds)|`3`|
+|**env.anycablePingTimestampPrecision**|Precision for timestamps in ping messages (s, ms, ns)|`s`|
+|**env.anycablePongTimeout**|How long to wait for a pong response before disconnecting the client (in seconds). Zero means no pongs required|`0`|
+|**env.anycableJwtIdKey**|Encryption key used to verify JWT tokens||
+|**env.anycableJwtIdParam**|Name of a query string param or an HTTP header carrying a token|`jid`|
+|**env.anycableJwtIdEnforce**|Whether to enforce token presence for all connections|`false`|
+|**env.anycableTurboRailsKey**|Enable Turbo Streams fastlane with the specified signing key||
+|**env.anycableTurboRailsCleartext**|Enable Turbo Streams fastlane without stream names signing|`false`|
+|**env.anycableCableReadyKey**|Enable CableReady fastlane with the specified signing key||
+|**env.anycableCableReadyCleartext**|Enable Cable Ready fastlane without stream names signing|`false`|
+|**env.anycableSse**|Enable SSE endpoint|`false`|
+|**env.anycableSsePath**|SSE endpoint path|`/events`|
 |**command**|Override entrypoint for Alpine images|`/usr/local/bin/anycable-go`
 |**args**|Customize ARGV (in addition to `env` settings above)|`[]`|
 
@@ -121,11 +180,19 @@ These are the values used to configure anycable-go itself:
 |**env.anycableDebug**|Enable debug mode (more verbose logging)||
 |**env.anycableHealthPath**|HTTP health endpoint path|`/health`|
 |**env.anycableMetricsLog**|Enable metrics logging (with info level)||
-|**env.anycableMetricsLogInterval**|Specify how often flush metrics logs (in seconds)|`15`|
+|**env.anycableMetricsRotateInterval**|Specify how often to flush metrics to writers (logs, statsd) (in seconds)|`15`|
+|**env.anycableMetricsLogInterval**|[DEPRECATED] Specify how often flush metrics logs. Use `env.anycableMetricsRotateInterval` instead|`15`|
 |**env.anycableMetricsLogFormatter**|Specify the path to custom Ruby formatter script (only supported on MacOS and Linux)||
 |**env.anycableMetricsHttp**|Enable HTTP metrics endpoint at the specified path|`/metrics`|
-|**env.anycableMetricsHost**|Server host for metrics endpoint, default: the same as for main server,||
-|**env.anycableMetricsPort**|Server port for metrics endpoint, default: the same as for main server,|`8081`|
+|**env.anycableMetricsHost**|Server host for metrics endpoint, default: the same as for main server||
+|**env.anycableMetricsPort**|Server port for metrics endpoint, default: the same as for main server|`8081`|
+|**env.anycableMetricsTags**|Comma-separated list of default (global) tags to add to every metric||
+|**env.anycableMetricsLogFilter**|Specify list of metrics to print to log||
+|**env.anycableStatsRefreshInterval**|How often to refresh the server stats (in seconds)|`5`|
+|**env.anycableStatsdHost**|Server host for metrics sent to statsd server||
+|**env.anycableStatsdPrefix**|Statsd metrics prefix|`anycable_go.`|
+|**env.anycableStatsdMaxPacketSize**|Statsd client maximum UDP packet size|`1400`|
+|**env.anycableStatsdTagsFormat**|One of "datadog", "influxdb", or "graphite"|`datadog`|
 |**serviceMonitor.enabled**|Enable creation of `ServiceMonitor` resource for automatic metrics discovery by Prometheus operator|`false`|
 |**serviceMonitor.namespace**|Namespace to create ServiceMonitor in (if differs from chart's namespace)|_chart's namespace_|
 |**serviceMonitor.interval**|Metrics scrape interval|_Prometheus default_|
