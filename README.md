@@ -74,7 +74,7 @@ These are the values used to configure anycable-go itself:
 |Value|Description|Default|
 |-----|-----------|-------|
 |**image.repository**|Choose between `anycable/anycable-go` and `ghcr.io/anycable/anycable-go-pro`|`anycable/anycable-go`|
-|**image.tag**|Version of docker image to use|`1.0.2`|
+|**image.tag**|Version of docker image to use|`1.4.7`|
 |**image.pullSecrets.enabled**|Enable creating secret for pulling image from AnyCable Pro private registry|`false`|
 |**image.pullSecrets.registry**|URL of a private registry you want to authorize to|`ghcr.io`|
 |**image.pullSecrets.username**|Github username|``|
