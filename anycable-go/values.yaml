@@ -11,7 +11,7 @@ hpa:
 
 image:
   repository: anycable/anycable-go
-  tag: 1.4.1
+  tag: 1.5.3
   pullPolicy: IfNotPresent
   pullSecrets:
     enabled: false
@@ -388,26 +388,51 @@ env:
   # How long to wait for a pong response before disconnecting the client (in seconds). Zero means no pongs require.
   anycablePongTimeout: "0"
 
-  # The encryption key used to verify JWT tokens, default: "" (disabled)
+  # [DEPRECATED] The encryption key used to verify JWT tokens, default: "" (disabled)
   anycableJwtIdKey: ""
 
-  # The name of a query string param or an HTTP header carrying a token, default: "jid" ("X-JID")
+  # The encryption key used to verify JWT tokens, default: "" (disabled)
+  anycableJwtSecret: ""
+
+  # [DEPRECATED] The name of a query string param or an HTTP header carrying a token, default: "jid" ("X-JID")
   anycableJwtIdParam: "jid"
 
-  # Whether to enforce token presence for all connections, default: false
+  # The name of a query string param or an HTTP header carrying a token, default: "jid" ("X-JID")
+  anycableJwtParam: "jid"
+
+  # [DEPRECATED] Whether to enforce token presence for all connections, default: false
   anycableJwtIdEnforce: "false"
 
-  # Enable Turbo Streams fastlane with the specified signing key, default: "" (disabled)
+  # Whether to enforce token presence for all connections, default: false
+  anycableEnforceJwt: "false"
+
+  # Enable public (unsigned) streams support, default: false
+  anycablePublicStreams: "false"
+
+  # Secret key to verify signed streams, default: "" (disabled)
+  anycableStreamsSecret: ""
+
+  # [DEPRECATED] Enable Turbo Streams fastlane with the specified signing key, default: "" (disabled)
   anycableTurboRailsKey: ""
 
-  # Enable Turbo Streams fastlane without stream names signing
-  anycableTurboRailsCleartext: "false"
+  # Enable Turbo Streams fastlane with the specified signing secret, default: "" (disabled)
+  anycableTurboStreamsSecret: ""
 
-  # Enable CableReady fastlane with the specified signing key, default: "" (disabled)
+  # [DEPRECATED] Enable CableReady fastlane with the specified signing key, default: "" (disabled)
   anycableCableReadyKey: ""
 
-  # Enable Cable Ready fastlane without stream names signing
-  anycableCableReadyCleartext: "false"
+  # Enable CableReady fastlane with the specified signing secret, default: "" (disabled)
+  anycableCableReadySecret: ""
+
+  # Single secret is enough to secure all AnyCable features, default: "" (disabled)
+  anycableSecret: ""
+
+  # No authentication (unless JWT specified), public streams, no HTTP broadcasting authentication, default: false
+  anycablePublic: "false"
+
+  # Whispering is an ability for client to publish events to the subscribed stream without involving
+  # any server-side logic, for signed streams, default: false
+  anycabelStreamsWhisper: "false"
 
   # Enable SSE endpoint
   anycableSse: "false"
