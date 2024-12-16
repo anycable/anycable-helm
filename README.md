@@ -11,9 +11,6 @@ helm repo add anycable https://helm.anycable.io/
 
 # With Helm 3
 helm upgrade -i anycable-go anycable/anycable-go
-
-# With Helm 2
-helm upgrade -i --name anycable-go anycable/anycable-go
 ```
 
 ## Introduction
@@ -35,9 +32,6 @@ helm repo add anycable https://helm.anycable.io/
 
 # With Helm 3
 helm upgrade -i anycable-go anycable/anycable-go
-
-# With Helm 2
-helm upgrade -i --name anycable-go anycable/anycable-go
 ```
 
 The command deploys anycable-go on the Kubernetes cluster in the default configuration. The [configuration section](#configuration) lists various ways to override default configuration during deployment.
@@ -82,7 +76,12 @@ These are the values used to configure anycable-go itself:
 |**env.anycableHost**|Listen IP address or host|`0.0.0.0`|
 |**env.anycablePort**|Listen port number|`8080`|
 |**env.anycablePath**|WebSocket endpoint path (you can specify multiple paths using a comma as separator)|`/cable`|
+|**env.anycableSecret**|The application secret used to secure AnyCable features: signed streams, JWT authentication, etc.|``|
+|**env.anycableStreamsSecret**|A dedicated secret key used to sign streams. If none specified, the application secret is used.|``|
+|**env.anycableJwtSecret**|The secret key used to sign JWT tokens. Optional (the application secret is used if no JWT secret specified)|``|
+|**env.anycableJwtTtl**|The time-to-live (TTL) for tokens in seconds.|`3600`|
 |**env.anycableBroadcastAdapter**|Broadcasting adapter to use: redis, http, redisx or nats (multiple are allowed via a comma-separated list)|`redis`|
+|**env.anycableBroadcastKey**|A secret key used to authorize broadcast requests. Currently, only used by the HTTP adapter. If not set, the value is inferred from the application secret.|``|
 |**env.anycableHttpBroadcastPath**|HTTP pub/sub endpoint path|`/_broadcast`|
 |**env.anycableHttpBroadcastPort**|Port to receive broadcasting requests|`8090`|
 |**env.anycableHttpBroadcastSecret**|Authorization secret to protect the broadcasting endpoint||
@@ -94,6 +93,7 @@ These are the values used to configure anycable-go itself:
 |**env.anycableRedisTlsVerify**|Whether to validate Redis server TLS certificate if rediss:// protocol is used|`false`|
 |**env.anycableRedisTlsClientCertPath**|Path to file with client TLS certificate in PEM format if Redis server requires client authentication||
 |**env.anycableRedisTlsClientKeyPath**|Path to file with private key for client TLS certificate if Redis server requires client authentication||
+|**env.anycableRedisDisableCache**|Some managed Redis (e.g., Google Cloud) providers block many Redis commands, including client-side server tracking, which is enabled in AnyCable by default. See [here for more details](https://docs.anycable.io/troubleshooting?id=failed-to-connect-to-redis-unknown-command-39client39-with-args-beginning-with-39tracking39)|`false`|
 |**env.anycableRpcConcurrency**|Max number of concurrent RPC request; should be slightly less than the RPC server concurrency|`28`|
 |**env.anycableRpcHost**|RPC service address|`localhost:50051`|
 |**env.anycableRpcEnableTls**|Enable client-side TLS with the RPC server|`false`|
@@ -147,6 +147,7 @@ These are the values used to configure anycable-go itself:
 |**env.anycableJwtIdKey**|Encryption key used to verify JWT tokens||
 |**env.anycableJwtIdParam**|Name of a query string param or an HTTP header carrying a token|`jid`|
 |**env.anycableJwtIdEnforce**|Whether to enforce token presence for all connections|`false`|
+|**env.anycableTurboStreams**|Enable Turbo Streams|`false`|
 |**env.anycableTurboRailsKey**|Enable Turbo Streams fastlane with the specified signing key||
 |**env.anycableTurboRailsCleartext**|Enable Turbo Streams fastlane without stream names signing|`false`|
 |**env.anycableCableReadyKey**|Enable CableReady fastlane with the specified signing key||

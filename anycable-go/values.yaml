@@ -11,7 +11,7 @@ hpa:
 
 image:
   repository: anycable/anycable-go
-  tag: 1.4.1
+  tag: 1.5.6
   pullPolicy: IfNotPresent
   pullSecrets:
     enabled: false
@@ -145,11 +145,26 @@ env:
   # listen port number
   anycablePort: "8080"
 
+  # The application secret used to secure AnyCable features: signed streams, JWT authentication, etc.
+  anycableSecret: ""
+
+  # A dedicated secret key used to sign streams. If none specified, the application secret is used.
+  anycableStreamsSecret: ""
+
+  # The secret key used to sign JWT tokens. Optional (the application secret is used if no JWT secret specified)
+  anycableJwtSecret: ""
+
+  # The time-to-live (TTL) for tokens in seconds. Default: 3600 (1 hour).
+  anycableJwtTtl: ""
+
   # WebSocket endpoint path (you can specify multiple paths using comma as separator)
   anycablePath: "/cable"
 
   # Broadcasting adapter to use: redis (default), http, redisx or nats (multiple are allowed via a comma-separated list)
   anycableBroadcastAdapter: "redis"
+
+  # A secret key used to authorize broadcast requests. Currently, only used by the HTTP adapter. If not set, the value is inferred from the application secret.
+  anycableBroadcastKey: ""
 
   # HTTP pub/sub endpoint path
   anycableHttpBroadcastPath: "/_broadcast"
@@ -183,6 +198,9 @@ env:
 
   # Path to file with private key for client TLS certificate if Redis server requires client authentication.
   anycableRedisTlsClientKeyPath: ""
+
+  # https://docs.anycable.io/troubleshooting?id=failed-to-connect-to-redis-unknown-command-39client39-with-args-beginning-with-39tracking39
+  anycableRedisDisableCache: ""
 
   # Max number of concurrent RPC request; should be slightly less than the RPC server concurrency, default: 28
   anycableRpcConcurrency: "28"
@@ -396,6 +414,9 @@ env:
 
   # Whether to enforce token presence for all connections, default: false
   anycableJwtIdEnforce: "false"
+
+  # Enable Turbo Streams
+  anycableTurboStreams: ""
 
   # Enable Turbo Streams fastlane with the specified signing key, default: "" (disabled)
   anycableTurboRailsKey: ""
