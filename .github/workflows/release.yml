@@ -27,7 +27,7 @@ jobs:
         run: helm package -d helm-repository/ anycable-helm/anycable-go/
 
       - name: Reindex Helm repository
-        run: helm repo index --url https://helm.anycable.net/ --merge helm-repository/index.yaml helm-repository/
+        run: helm repo index --url https://helm.anycable.io/ --merge helm-repository/index.yaml helm-repository/
 
       - name: Commit & Push gh-pages with a new chart
         run: |
