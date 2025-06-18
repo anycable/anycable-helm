@@ -1,0 +1,474 @@
+nodeSelector: {}
+
+replicas: 1
+
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  # ATTENTION: This argument will be renamed in the future.
+  targetCPUUtilizationPercentage: 50
+
+image:
+  repository: anycable/anycable-go
+  tag: 1.5.6
+  pullPolicy: IfNotPresent
+  pullSecrets:
+    enabled: false
+    registry: "ghcr.io"
+    username: ""
+    password: ""
+
+ingress:
+  enable: false
+  className: ""
+  path: /cable
+  annotations: {}
+    # nginx.ingress.kubernetes.io/proxy-body-size: "32m"
+  acme: {}
+    # hosts: []
+  nonAcme:
+    hosts: []
+    # - secretName: example-tls
+    #   names: []
+    #   tls:
+    #     crt: ""
+    #     key: ""
+
+  # - acme: false
+  #   name: example
+  #   hosts: []
+  #   path: /cable
+  #   tls:
+  #     crt: ""
+  #     key: ""
+
+revisionHistoryLimit: 10
+
+rollingUpdate:
+  maxSurge: 1
+  maxUnavailable: 0
+
+# Default resource limits for items API app.
+# Do not forget to tune them to match your needs.
+resources:
+  limits:
+    cpu: 350m
+    memory: 400Mi
+  requests:
+    cpu: 350m
+    memory: 400Mi
+
+pod:
+  annotations: {}
+  extraLabels: {}
+  # Use a different ServiceAccount
+  # (leave blank for default)
+  serviceAccountName: ""
+  # Add tolerations to pods
+  tolerations: []
+    # - key: key1
+    #   operator: Equal
+    #   value: value1
+    #   effect: NoExecute
+    #   tolerationSeconds: 3600
+
+service:
+  annotations: {}
+  type: LoadBalancer
+  port: 443
+
+# Define names or additional secrets to overwrite env variables
+# from the `env-secret.yml`.
+# (`ANYCABLE_REDIS_URL`, `ANYCABLE_REDIS_SENTINELS`, etc.)
+#
+# You can add as may different secrets as you need,
+# they will override same env variables in the given order.
+secrets: []
+# - 'custom-secret'
+
+# # You can overwrite probes if needed
+# livenessProbe:
+#   httpGet:
+#     path: /health
+#     port: http
+#   initialDelaySeconds: 90
+#   timeoutSeconds: 3
+#   successThreshold: 1
+#   failureThreshold: 3
+#   periodSeconds: 10
+# readinessProbe:
+#   httpGet:
+#     path: /health
+#     port: http
+#   initialDelaySeconds: 15
+#   timeoutSeconds: 3
+#   successThreshold: 1
+#   failureThreshold: 3
+#   periodSeconds: 10
+
+# # Or disable them altogether
+# livenessProbe: ~
+# readinessProbe: ~
+
+serviceMonitor:
+  enabled: false
+  ## Specify a namespace if needed
+  # namespace: monitoring
+  # fallback to the prometheus default unless specified
+  # interval: 10s
+  ## Set of labels that need to be present in ServiceMonitor to be discovered by Prometheus:
+  ## [Prometheus Selector Label](https://github.com/bitnami/charts/tree/master/bitnami/prometheus-operator#prometheus-operator-1)
+  ## [Kube Prometheus Selector Label](https://github.com/bitnami/charts/tree/master/bitnami/prometheus-operator#exporters)
+  ## E.g. if you use prometheus-operator:
+  # labels:
+  #   release: prometheus-operator
+  labels: {}
+
+tls:
+  secretName: "caremessage-secrets-certificates-202208"
+  # Keep empty to use existing secret
+  # crt: ~
+  # key: ~
+  # OR fill it with PEM-encoded full certificate chain and private key to create new secret:
+  # crt: |
+  #   -----BEGIN CERTIFICATE-----
+  #   …
+  # key: |
+  #   -----BEGIN PRIVATE KEY-----
+  #   …
+
+# Application options (passed as env variables)
+env:
+  # listen ip address or host
+  anycableHost: "0.0.0.0"
+
+  # listen port number
+  anycablePort: "8080"
+
+  # SSL certificate path
+  anycableSslCert: "/etc/cmcerts/tls.crt"
+
+  # SSL private key path
+  anycableSslKey: "/etc/cmcerts/tls.key"
+
+  # Enable SSL for AnyCable
+  anycableSsl: "true"
+
+  # The application secret used to secure AnyCable features: signed streams, JWT authentication, etc.
+  anycableSecret: ""
+
+  # A dedicated secret key used to sign streams. If none specified, the application secret is used.
+  anycableStreamsSecret: ""
+
+  # The secret key used to sign JWT tokens. Optional (the application secret is used if no JWT secret specified)
+  anycableJwtSecret: ""
+
+  # The time-to-live (TTL) for tokens in seconds. Default: 3600 (1 hour).
+  anycableJwtTtl: ""
+
+  # WebSocket endpoint path (you can specify multiple paths using comma as separator)
+  anycablePath: "/cable"
+
+  # Broadcasting adapter to use: redis (default), http, redisx or nats (multiple are allowed via a comma-separated list)
+  anycableBroadcastAdapter: "redis"
+
+  # A secret key used to authorize broadcast requests. Currently, only used by the HTTP adapter. If not set, the value is inferred from the application secret.
+  anycableBroadcastKey: ""
+
+  # HTTP pub/sub endpoint path
+  anycableHttpBroadcastPath: "/_broadcast"
+
+  # Which port to receive broadcasting requests
+  anycableHttpBroadcastPort: "8090"
+
+  # Authorization secret to protect the broadcasting endpoint
+  anycableHttpBroadcastSecret: ""
+
+  # Redis db url
+  anycableRedisUrl: "redis://ratelimiter-redis.gce:6379"
+
+  # Redis channel for broadcasts
+  anycableRedisChannel: "caremessage_production"
+
+  # Comma separated list of sentinel hosts, format: ':password@hostname:port,..'
+  anycableRedisSentinels: ""
+
+  # Interval to rediscover sentinels in seconds, anycable-go default: 30
+  anycableRedisSentinelDiscoveryInterval: "30"
+
+  # Interval to periodically ping Redis to make sure it's alive, default: 30
+  anycableRedisKeepaliveInterval: "30"
+
+  # Whether to validate Redis server TLS certificate if rediss:// protocol is used (default: false).
+  anycableRedisTlsVerify: "false"
+
+  # Path to file with client TLS certificate in PEM format if Redis server requires client authentication.
+  anycableRedisTlsClientCertPath: ""
+
+  # Path to file with private key for client TLS certificate if Redis server requires client authentication.
+  anycableRedisTlsClientKeyPath: ""
+
+  # https://docs.anycable.io/troubleshooting?id=failed-to-connect-to-redis-unknown-command-39client39-with-args-beginning-with-39tracking39
+  anycableRedisDisableCache: ""
+
+  # Max number of concurrent RPC request; should be slightly less than the RPC server concurrency, default: 28
+  anycableRpcConcurrency: "28"
+
+  # RPC service address
+  anycableRpcHost: "coreapp-rpc-main:443"
+
+  # Enable TLS for RPC
+  anycableRpcEnableTls: "false"
+
+  # Verify TLS for RPC
+  anycableRpcTlsVerify: "false"
+
+  # CA root certificate file path or contents in PEM format (if not set, system CAs will be used)
+  anycableRpcTlsRootCa: ""
+
+  # Override default MaxCallRecvMsgSize for RPC client (bytes), default: none
+  anycableRpcMaxCallRecvSize: ""
+
+  # Override default MaxCallSendMsgSize for RPC client (bytes), default: none
+  anycableRpcMaxCallSendSize: ""
+
+  # RPC implementation (grpc, http), default to infer RPC implementation from RPC host.
+  anycableRpcImpl: ""
+
+  # Authentication secret for RPC over HTTP
+  anycableHttpRpcSecret: ""
+
+  # HTTP RPC timeout (in ms)
+  anycableHttpRpcTimeout: "3000"
+
+  # List of headers to proxy to RPC
+  anycableHeaders: "cookie"
+
+  # Cookie keys to send to RPC, default is all
+  anycableProxyCookies: ""
+
+  # Configuration presets, comma-separated (none, fly, heroku, broker). Inferred automatically if possible
+  anycablePresets: ""
+
+  # Broker engine to use: none (default), memory, nats, redis
+  anycableBroker: ""
+
+  # Max number of messages to keep in the stream's history
+  anycableHistoryLimit: "100"
+
+  # TTL for messages in streams history (seconds)
+  anycableHistoryTtl: "300"
+
+  # TTL for expired/disconnected sessions (seconds)
+  anycableSessionsTtl: "300"
+
+  # Pub/Sub adapter to use: none (default), redis or nats
+  anycablePubsub: ""
+
+  # Comma separated list of NATS cluster servers
+  anycableNatsServers: "nats://localhost:4222"
+
+  # NATS channel for broadcasts
+  anycableNatsChannel: "__anycable__"
+
+  # Pass this option to disable NATS servers randomization during (re-)connect
+  anycableNatsDontRandomizeServers: "false"
+
+  # Enable embedded NATS server and use it for pub/sub
+  anycableEmbedNats: ""
+
+  # NATS server bind address
+  anycableEnatsAddr: "nats://localhost:4222"
+
+  # NATS cluster service bind address
+  anycableEnatsCluster: ""
+
+  # NATS cluster name
+  anycableEnatsClusterName: "anycable-cluster"
+
+  # Comma-separated list of known cluster addresses
+  anycableEnatsClusterRoutes: ""
+
+  # NATS gateway bind address
+  anycableEnatsGateway: ""
+
+  # Semicolon-separated list of known gateway configurations
+  anycableEnatsGateways: ""
+
+  # NATS gateway advertise address
+  anycableEnatsGatewayAdvertise: ""
+
+  # Embedded NATS store directory for JetStream (auto-generated by default in the temp dir)
+  anycableEnatsStoreDir: ""
+
+  # Embedded NATS unique server name (auto-generated by default)
+  anycableEnatsServerName: ""
+
+  # Enable NATS server logs
+  anycableEnatsDebug: ""
+
+  # Enable NATS server protocol trace logs
+  anycableEnatsTrace: ""
+
+  # Set logging level (debug/info/warn/error/fatal)
+  anycableLogLevel: "info"
+
+  # Set logging format (text, json)
+  anycableLogFormat: "text"
+
+  # Enable debug mode (more verbose logging)
+  anycableDebug: ""
+
+  # Enable metrics logging (with info level)
+  anycableMetricsLog: ""
+
+  # Specify how often flush metrics to writers (logs, statsd) (in seconds), default: 15
+  anycableMetricsRotateInterval: "15"
+
+  # [DEPRECATED] Specify how often flush metrics logs. Use anycableMetricsRotateInterval instead
+  anycableMetricsLogInterval: "15"
+
+  # Specify the path to custom Ruby formatter script (only supported on MacOS and Linux)
+  anycableMetricsLogFormatter: ""
+
+  # Enable HTTP metrics endpoint at the specified path
+  anycableMetricsHttp: "/metrics"
+
+  # Server host for metrics endpoint, default: the same as for main server,
+  anycableMetricsHost: ""
+
+  # Server port for metrics endpoint, default: the same as for main server,
+  anycableMetricsPort: "8081"
+
+  # Comma-separated list of default (global) tags to add to every metric
+  anycableMetricsTags: ""
+
+  # Specify list of metrics to print to log (to reduce the output)
+  anycableMetricsLogFilter: ""
+
+  # How often to refresh the server stats (in seconds), default: 5
+  anycableStatsRefreshInterval: "5"
+
+  # Server host for metrics sent to statsd server
+  anycableStatsdHost: ""
+
+  # Statsd metrics prefix
+  anycableStatsdPrefix: "anycable_go."
+
+  # Statsd client maximum UDP packet size
+  anycableStatsdMaxPacketSize: "1400"
+
+  # One of "datadog", "influxdb", or "graphite"
+  anycableStatsdTagsFormat: "datadog"
+
+  # HTTP health endpoint path
+  anycableHealthPath: "/cmanycablehealthcheck"
+
+  # Enable TLS for health checks
+  anycableHealthTls: "true"
+
+  # SSL certificate path (environment variable)
+  anycableSslCertEnv: "/etc/cmcerts/tls.crt"
+
+  # SSL private key path (environment variable)
+  anycableSslKeyEnv: "/etc/cmcerts/tls.key"
+
+  # Maximum size of a message in bytes, default: 65536
+  anycableMaxMessageSize: ""
+
+  # Limit simultaneous server connections (0 – without limit), default: 0
+  anycableMaxConn: "0"
+
+  # Graceful shutdown timeout (in seconds), default: 30
+  anycableShutdownTimeout: "30"
+
+  # [DEPRECATED] Graceful shutdown timeouts (in seconds). Use anycableShutdownTimeout instead.
+  anycableDisconnectTimeout: "5"
+
+  # Max number of Disconnect calls per second
+  anycableDisconnectRate: "100"
+
+  # The number of goroutines to use for disconnect calls on shutdown
+  anycableShutdownPoolSize: "16"
+
+  # The size of the channel's buffer for disconnect requests
+  anycableDisconnectBacklogSize: "4096"
+
+  # Define when to call Disconnect callback: auto (default), always, never.
+  anycableDisconnectMode: "auto"
+
+  # [DEPRECATED] Disable calling Disconnect callback. Use anycableDisconnectMode=never instead.
+  anycableDisableDisconnect: "false"
+
+  # WebSocket connection read buffer size, default: 1024
+  anycableReadBufferSize: "1024"
+
+  # WebSocket connection write buffer size, default: 1024
+  anycableWriteBufferSize: "1024"
+
+  # Enable experimental WebSocket per message compression, default: false
+  anycableEnableWsCompression: "false"
+
+  # The size of the goroutines pool to broadcast messages, default: 16
+  anycableHubGopoolSize: "16"
+
+  # Accept requests only from specified origins. No check is performed if empty, default: ""
+  anycableAllowedOrigins: ""
+
+  # Action Cable ping interval (in seconds), default: 3
+  anycablePingInterval: "3"
+
+  # Precision for timestamps in ping messages (s, ms, ns), default: s
+  anycablePingTimestampPrecision: "s"
+
+  # How long to wait for a pong response before disconnecting the client (in seconds). Zero means no pongs require.
+  anycablePongTimeout: "0"
+
+  # The encryption key used to verify JWT tokens, default: "" (disabled)
+  anycableJwtIdKey: ""
+
+  # The name of a query string param or an HTTP header carrying a token, default: "jid" ("X-JID")
+  anycableJwtIdParam: "jid"
+
+  # Whether to enforce token presence for all connections, default: false
+  anycableJwtIdEnforce: "false"
+
+  # Enable Turbo Streams
+  anycableTurboStreams: ""
+
+  # Enable Turbo Streams fastlane with the specified signing key, default: "" (disabled)
+  anycableTurboRailsKey: ""
+
+  # Enable Turbo Streams fastlane without stream names signing
+  anycableTurboRailsCleartext: "false"
+
+  # Enable CableReady fastlane with the specified signing key, default: "" (disabled)
+  anycableCableReadyKey: ""
+
+  # Enable Cable Ready fastlane without stream names signing
+  anycableCableReadyCleartext: "false"
+
+  # Enable SSE endpoint
+  anycableSse: "false"
+
+  # SSE endpoint path
+  anycableSsePath: "/events"
+
+  # Under this key you can define custom env variables (for example,
+  # to support new anycable features, not added to the chart yet).
+  # All variables from this part are added to the pod through the secret.
+  #
+  # Example
+  #   custom:
+  #     NEW_FEATURE: foobar
+  custom: {}
+
+global:
+  # In this global you can overload any path defined in the rest of the chart
+  anycableGo: {}
+
+caremessage:
+  environment: "production"
+
+certSecret: "caremessage-secrets-certificates-202208"

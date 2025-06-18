@@ -1,31 +1,47 @@
-{{- if and .Values.ingress.enable .Values.ingress.acme }}
-{{- $root := . }}
-{{- $httpLocation := .Values.ingress.path }}
+{{- $values := include "anycableGo.values" . | fromYaml }}
+{{- with $values.ingress }}
+{{- if .enable | and (.acme | default dict).hosts }}
+{{- $apiVersion := include "anycableGo.apiVersions.ingress" $ }}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: {{ $apiVersion }}
 kind: Ingress
 metadata:
-  name: "{{ template "anycableGo.fullname" $root }}-acme"
+  name: "{{ template "anycableGo.fullname" $ }}-acme"
   annotations:
     kubernetes.io/tls-acme: "true"
-    {{- range $key, $value := .Values.ingress.annotations }}
+    {{- range $key, $value := .annotations }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
+  {{- if .className }}
+  ingressClassName: {{ .className }}
+  {{- end }}
   tls:
-  - hosts:
-{{- range $host := .Values.ingress.acme.hosts }}
-    - {{ $host | quote }}
-{{- end }}
-    secretName: "{{ template "anycableGo.fullname" $root }}-tls-acme"
+    - hosts:
+        {{- range $host := .acme.hosts }}
+        - {{ $host | quote }}
+        {{- end }}
+      secretName: "{{ template "anycableGo.fullname" $ }}-tls-acme"
   rules:
-{{- range $host := .Values.ingress.acme.hosts }}
-  - host: {{ $host | quote }}
-    http:
-      paths:
-      - path: {{ $httpLocation | quote }}
-        backend:
-          serviceName: "{{ template "anycableGo.fullname" $root }}"
-          servicePort: 80
+    {{- range $host := .acme.hosts }}
+    {{- $serviceName := include "anycableGo.fullname" $ }}
+    - host: {{ $host | quote }}
+      http:
+        paths:
+          {{- if eq $apiVersion "networking.k8s.io/v1" }}
+          - path: {{ $values.ingress.path | quote }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $serviceName | quote }}
+                port:
+                  name: http
+          {{- else }}
+          - path: {{ $values.ingress.path | quote }}
+            backend:
+              serviceName: {{ $serviceName | quote }}
+              servicePort: http
+          {{- end }}
+    {{- end }}
 {{- end }}
 {{- end }}

@@ -1,26 +1,34 @@
+{{- $values := include "anycableGo.values" . | fromYaml }}
+{{- with ($values.env | default dict) }}
+---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: {{ template "anycableGo.name" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: {{ .Release.Name | quote }}
-    heritage: {{ .Release.Service | quote }}
-  name: {{ template "anycableGo.fullname" . }}
+    app: {{ template "anycableGo.name" $ }}
+    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    release: {{ $.Release.Name | quote }}
+    heritage: {{ $.Release.Service | quote }}
+  {{- if ($values.service | default dict).annotations }}
+  annotations: {{ $values.service.annotations | toYaml | nindent 4 }}
+  {{- end }}
+  name: {{ template "anycableGo.fullname" $ }}
+
 spec:
   ports:
-  - name: http
-    port: 443
-    protocol: TCP
-    targetPort: http
-  {{- if .Values.env.anycableMetricsPort }}
-  - name: metrics
-    port: {{ .Values.env.anycableMetricsPort }}
-    protocol: TCP
-    targetPort: metrics
-  {{- end }}
+    - name: http
+      port: {{ $values.service.port | default 443 }}
+      protocol: TCP
+      targetPort: http
+    {{- if .anycableMetricsPort }}
+    - name: metrics
+      port: {{ .anycableMetricsPort }}
+      protocol: TCP
+      targetPort: metrics
+    {{- end }}
   selector:
-    app: {{ template "anycableGo.name" . }}
+    app: {{ template "anycableGo.name" $ }}
     component: anycable-go
-    release: {{ .Release.Name | quote }}
-  type: {{ .Values.caremessage.servicetype }}
+    release: {{ $.Release.Name | quote }}
+  type: {{ $values.service.type | default "ClusterIP" }}
+{{- end }}
