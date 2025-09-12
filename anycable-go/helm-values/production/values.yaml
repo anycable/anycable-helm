@@ -1,6 +1,6 @@
 nodeSelector: {}
 
-replicas: 1
+replicas: 3
 
 hpa:
   enabled: false
@@ -126,7 +126,7 @@ serviceMonitor:
   labels: {}
 
 tls:
-  secretName: "caremessage-secrets-certificates-202208"
+  secretName: "caremessage-secrets-certificates-202508"
   # Keep empty to use existing secret
   # crt: ~
   # key: ~
@@ -186,7 +186,7 @@ env:
   anycableHttpBroadcastSecret: ""
 
   # Redis db url
-  anycableRedisUrl: "redis://ratelimiter-redis.gce:6379"
+  anycableRedisUrl: "redis://ratelimiter-redis.gce:6379/11"
 
   # Redis channel for broadcasts
   anycableRedisChannel: "caremessage_production"
@@ -471,4 +471,4 @@ global:
 caremessage:
   environment: "production"
 
-certSecret: "caremessage-secrets-certificates-202208"
+certSecret: "caremessage-secrets-certificates-202508"
