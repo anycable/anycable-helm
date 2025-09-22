@@ -47,12 +47,29 @@ spec:
         {{- end }}
       name: {{ $.Release.Name | quote }}
     spec:
-      {{- if (.pod | default dict).serviceAccountName }}
-      serviceAccountName: {{ .pod.serviceAccountName }}
+      {{- if .image.pullSecrets.enabled }}
+      imagePullSecrets:
+        - name: "{{ $.Release.Name }}-docker-registry-secret"
       {{- end }}
-      {{- if .nodeSelector }}
-      nodeSelector: {{ toYaml .nodeSelector | nindent 8 }}
+      {{- if .pod.securityContext.enabled }}
+      securityContext: {{- omit .pod.securityContext "enabled" | toYaml | nindent 8 }}
       {{- end }}
+      {{- with .pod.schedulerName }}
+      schedulerName: {{ . | quote }}
+      {{- end }}
+      {{- with .pod.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- . | toYaml 8 | nindent 8 }}
+      {{- end }}
+      {{- with .pod.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .pod.runtimeClassName }}
+      runtimeClassName: {{ . | quote }}
+      {{- end }}
+
+      {{- if .affinity }}
+      affinity: {{- .affinity | toYaml | nindent 8 }}
+      {{- else }}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -63,12 +80,15 @@ spec:
                     app: {{ template "anycableGo.name" $ }}
                     release: {{ $.Release.Name | quote }}
               weight: 100
-      {{- if (.pod | default dict).tolerations }}
-      tolerations: {{- .pod.tolerations | toYaml | nindent 8 }}
       {{- end }}
-      {{- if .image.pullSecrets.enabled }}
-      imagePullSecrets:
-        - name: "{{ $.Release.Name }}-docker-registry-secret"
+      {{- with .nodeSelector }}
+      nodeSelector: {{- . | toYaml | nindent 8 }}
+      {{- end }}
+      {{- with .pod.tolerations }}
+      tolerations: {{- . | toYaml | nindent 8 }}
+      {{- end }}
+      {{- with .pod.serviceAccountName }}
+      serviceAccountName: {{ . | quote }}
       {{- end }}
       containers:
         - name: anycable-go
@@ -133,6 +153,9 @@ spec:
           {{- if .resources }}
           resources: {{ toYaml .resources | nindent 12 }}
           {{- end }}
+          {{- if .containerSecurityContext.enabled }}
+          securityContext: {{- omit .containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           {{- if .tls }}
@@ -140,9 +163,12 @@ spec:
             - name: ssl
               mountPath: "/etc/ssl/anycable-go"
               readOnly: true
+<<<<<<< HEAD
             - name: certificates-secret-volume
               mountPath: "/etc/cmcerts"
               readOnly: true  
+=======
+>>>>>>> upstream/master
           {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
@@ -159,4 +185,13 @@ spec:
             secretName: {{ .tls.secretName | quote }}
         {{- end }}
       terminationGracePeriodSeconds: 30
+<<<<<<< HEAD
+=======
+      {{- with .tls }}
+      volumes:
+        - name: ssl
+          secret:
+            secretName: {{ .secretName | quote }}
+      {{- end }}
+>>>>>>> upstream/master
 {{- end }}

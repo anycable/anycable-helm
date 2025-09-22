@@ -9,7 +9,6 @@ To install anycable-go to your kubernetes cluster simply run:
 ```shell
 helm repo add anycable https://helm.anycable.io/
 
-# With Helm 3
 helm upgrade -i anycable-go anycable/anycable-go
 ```
 
@@ -23,14 +22,11 @@ AnyCable uses the same protocol as ActionCable, so you can use its JavaScript cl
 
 ## Prerequisites
 
-* Kubernetes 1.4+ with Beta APIs enabled
-
 ## Installing chart
 
 ```shell
 helm repo add anycable https://helm.anycable.io/
 
-# With Helm 3
 helm upgrade -i anycable-go anycable/anycable-go
 ```
 
@@ -53,7 +49,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to helm 
 ```shell
 helm upgrade -i anycable-go \
   --namespace anycable-go \
-  --set image.tag=1.0.1 \
+  --set image.tag=1.6.3 \
   anycable/anycable-go
 ```
 
@@ -68,7 +64,7 @@ These are the values used to configure anycable-go itself:
 |Value|Description|Default|
 |-----|-----------|-------|
 |**image.repository**|Choose between `anycable/anycable-go` and `ghcr.io/anycable/anycable-go-pro`|`anycable/anycable-go`|
-|**image.tag**|Version of docker image to use|`1.4.7`|
+|**image.tag**|Version of docker image to use|`1.6.3`|
 |**image.pullSecrets.enabled**|Enable creating secret for pulling image from AnyCable Pro private registry|`false`|
 |**image.pullSecrets.registry**|URL of a private registry you want to authorize to|`ghcr.io`|
 |**image.pullSecrets.username**|Github username|``|
@@ -162,14 +158,36 @@ These are the values used to configure anycable-go itself:
 |Value|Description|Default|
 |-----|-----------|-------|
 |**replicas**|Number of replicas for `anycable-go` deployment (ignored when HPA is enabled)|`1`|
+
+|**containerSecurityContext.enabled**|Enables container's Security Context|`false`|
+|**containerSecurityContext.runAsUser**|Sets webhook containers' Security Context runAsUser|`1001`|
+|**containerSecurityContext.runAsGroup**|Sets webhook containers' Security Context runAsGroup|`1001`|
+|**containerSecurityContext.runAsNonRoot**|Sets webhook containers' Security Context runAsNonRoot|`true`|
+|**containerSecurityContext.privileged**|Sets webhook container's Security Context privileged|`false`|
+|**containerSecurityContext.allowPrivilegeEscalation**|Sets webhook container's Security Context allowPrivilegeEscalation|`false`|
+|**containerSecurityContext.capabilities.drop**|Sets webhook container's Security Context capabilities.drop|`["ALL"]`|
+|**containerSecurityContext.seccompProfile.type**|Sets webhook container's Security Context seccompProfile.type|`"RuntimeDefault"`|
+|**containerSecurityContext.readOnlyRootFilesystem**|Sets webhook container's Security Context readOnlyRootFilesystem|`true`|
 |**hpa.enabled**|Enable HorizontalPodAutoscaler|`false`|
 |**hpa.minReplicas**|Minimum replicas for HPA|`1`|
 |**hpa.maxReplicas**|Maximum replicas for HPA|`3`|
 |**hpa.targetCPUUtilizationPercentage**|Target CPU utilization for HPA|`50`|
 |**pod.annotations**|User-specified Pod annotations|`{}`|
 |**pod.extraLabels**|User-specified Pod Labels|`{}`|
+|**pod.priorityClassName**|Controller pod priority class name|`""`|
+|**pod.runtimeClassName**|Name of the runtime class to be used by pod(s)|`""`|
+|**pod.schedulerName**|Name of the k8s scheduler (other than default)|`""`|
+|**pod.securityContext.enabled**|Enables Controller pods' Security Context|`false`|
+|**pod.securityContext.fsGroupChangePolicy**|Set filesystem group change policy|`"Always"`|
+|**pod.securityContext.sysctls**|Set kernel settings using the sysctl interface|`[]`|
+|**pod.securityContext.supplementalGroups**|Set filesystem extra groups|`[]`|
+|**pod.securityContext.fsGroup**|Set Controller pod's Security Context fsGroupo|`1001`|
+|**pod.serviceAccountName**|User-specified ServiceAccount for Pod identity|`""`|
 |**pod.tolerations**|User-specified Pod tolerations|`[]`|
-|**pod.serviceAccountName**|User-specified ServiceAccount for Pod identity||
+|**pod.topologySpreadConstraints**|Topology Spread Constraints for pod assignment|`[]`|
+|**pod.disruptionBudget.enabled**|Enables podDisruptionBudget configuration|`true`|
+|**pod.disruptionBudget.minUnavailable**|podDisruptionBudget minimum number unavailable pods|`"50%"`|
+|**pod.disruptionBudget.maxUnavailable**|podDisruptionBudget maximum number of unavailable pods|`""`|
 |**service.annotations**|User-specified Service annotations|`{}`|
 
 ### Monitoring

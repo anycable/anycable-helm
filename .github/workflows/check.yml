@@ -1,0 +1,23 @@
+name: check-helm-chart
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  check-helm-chart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout anycable-helm
+        uses: actions/checkout@v4
+        with:
+          path: anycable-helm/
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+
+      - name: Run Helm Linter
+        run: helm lint anycable-helm/anycable-go
