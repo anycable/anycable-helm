@@ -5,12 +5,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "anycableGo.fullname" $ }}
-  labels:
-    app: {{ template "anycableGo.name" $ }}
-    component: anycable-go
-    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
-    release: {{ $.Release.Name | quote }}
-    heritage: {{ $.Release.Service | quote }}
+  labels: {{ include "anycableGo.labels" $ | nindent 4 }}
 spec:
   progressDeadlineSeconds: 600
   {{- if eq .hpa.enabled false }}
@@ -31,17 +26,12 @@ spec:
     {{- end }}
   template:
     metadata:
-      labels:
-        app: {{ template "anycableGo.name" $ }}
-        component: anycable-go
-        chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
-        release: {{ $.Release.Name | quote }}
-        heritage: {{ $.Release.Service | quote }}
+      labels: {{ include "anycableGo.labels" $ | nindent 8 }}
         {{- if (.pod | default dict).extraLabels }}
         {{- .pod.extraLabels | toYaml | nindent 8 }}
         {{- end }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/env-secret.yml") $ | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/env-secret.yaml") $ | sha256sum }}
         {{- if (.pod | default dict).annotations }}
         {{- .pod.annotations | toYaml | nindent 8 }}
         {{- end }}

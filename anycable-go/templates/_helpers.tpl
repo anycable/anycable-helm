@@ -17,41 +17,14 @@
 {{- default (printf "%s-anycable-go" $.Release.Name) $values.fullNameOverride | trunc 63 -}}
 {{- end -}}
 
-{{/* Template to generate apiVersion for HPA */}}
-{{- define "anycableGo.apiVersions.hpa" }}
-    {{- $kubeVersion := $.Capabilities.KubeVersion.Version }}
-    {{- $apiVersions := $.Capabilities.APIVersions }}
-
-    {{- if $kubeVersion | semverCompare ">=1.26.0-0" -}}
-        {{- "autoscaling/v2" -}}
-    {{- else if $kubeVersion | semverCompare ">=1.23.0-0" | and ($apiVersions.Has "autoscaling/v2") -}}
-        {{- "autoscaling/v2" -}}
-    {{- else if $kubeVersion | semverCompare ">=1.12.0-0" | and ($apiVersions.Has "autoscaling/v2beta2") -}}
-        {{- "autoscaling/v2beta2" -}}
-    {{- else if $apiVersions.Has "autoscaling/v2beta1" }}
-        {{- "autoscaling/v2beta1" -}}
-    {{- else }}
-        {{- "autoscaling/v1" -}}
-    {{- end -}}
+{{/* Template to generate common labels */}}
+{{- define "anycableGo.labels" -}}
+app: {{ template "anycableGo.name" . }}
+chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+component: anycable-go
+heritage: {{ $.Release.Service | quote }}
+release: {{ $.Release.Name | quote }}
 {{- end -}}
-
-{{/* Template to generate apiVersion for ingress */}}
-{{- define "anycableGo.apiVersions.ingress" }}
-    {{- $kubeVersion := $.Capabilities.KubeVersion.Version }}
-    {{- $apiVersions := $.Capabilities.APIVersions }}
-
-    {{- if ($kubeVersion | semverCompare ">=1.22.0-0") -}}
-        {{- if $apiVersions.Has "networking.k8s.io/v1" -}}
-            {{- "networking.k8s.io/v1" -}}
-        {{- end -}}
-    {{- else if ($kubeVersion | semverCompare ">=1.19.0-0" | and ($apiVersions.Has "networking.k8s.io/v1")) -}}
-        {{- "networking.k8s.io/v1" -}}
-    {{- else if ($kubeVersion | semverCompare ">=1.14.0-0" | and ($apiVersions.Has "networking.k8s.io/v1beta1")) -}}
-        {{- "networking.k8s.io/v1beta1" -}}
-    {{- else if $apiVersions.Has "extensions/v1beta1" -}}
-        {{- "extensions/v1beta1" -}}
-    {{- end -}}
-{{- end }}
 
 {{/* Template to generate secrets for a private Docker repository for K8s to use */}}
 {{- define "anycableGo.imagePullSecrets" }}

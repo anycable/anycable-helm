@@ -8,12 +8,7 @@ kind: ServiceMonitor
 metadata:
   name: {{ $template }}
   namespace: {{ .namespace | default $.Release.Namespace }}
-  labels:
-    app: {{ $template }}
-    component: anycable-go
-    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
-    release: {{ $.Release.Name | quote }}
-    heritage: {{ $.Release.Service | quote }}
+  labels: {{ include "anycableGo.labels" $ | nindent 4 }}
     {{- range $key, $value := .labels }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}

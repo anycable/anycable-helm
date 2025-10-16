@@ -14,8 +14,19 @@
 *.swp
 *.bak
 *.tmp
+*.orig
 *~
 # Various IDEs
 .project
 .idea/
 *.tmproj
+.vscode/
+# CI files
+.github/
+.gitlab-ci.yml
+.travis.yml
+# Test files
+ci/
+test-values.yaml
+# Chart development files
+OWNERS

@@ -4,12 +4,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ template "anycableGo.fullname" $ }}
-  labels:
-    app: {{ template "anycableGo.name" $ }}
-    component: anycable-go
-    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
-    release: {{ $.Release.Name | quote }}
-    heritage: {{ $.Release.Service | quote }}
+  labels: {{ include "anycableGo.labels" $ | nindent 4 }}
 spec:
   {{- if .minAvailable }}
   minAvailable: {{ .minAvailable }}

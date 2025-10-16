@@ -1,0 +1,92 @@
+{{- $values := include "anycableGo.values" . | fromYaml }}
+Thank you for installing {{ .Chart.Name }}!
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }} -n {{ .Release.Namespace }}
+  $ helm get all {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+==============================================================================
+
+{{- if $values.ingress.enable }}
+
+Your AnyCable-Go WebSocket server will be available at:
+{{- if ($values.ingress.acme | default dict).hosts }}
+{{- range ($values.ingress.acme | default dict).hosts }}
+  https://{{ . }}{{ $values.ingress.path }}
+{{- end }}
+{{- end }}
+{{- if ($values.ingress.nonAcme | default dict).hosts }}
+{{- range ($values.ingress.nonAcme | default dict).hosts }}
+{{- range .names }}
+  https://{{ . }}{{ $values.ingress.path }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- else }}
+
+To access your AnyCable-Go server:
+
+1. Get the application URL by running these commands:
+
+{{- if contains "NodePort" $values.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "anycableGo.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo "WebSocket URL: ws://$NODE_IP:$NODE_PORT{{ $values.env.anycablePath }}"
+
+{{- else if contains "LoadBalancer" $values.service.type }}
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        Watch the status with: kubectl get svc -w {{ include "anycableGo.fullname" . }} -n {{ .Release.Namespace }}
+
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "anycableGo.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+  echo "WebSocket URL: ws://$SERVICE_IP:{{ $values.env.anycablePort }}{{ $values.env.anycablePath }}"
+
+{{- else if contains "ClusterIP" $values.service.type }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ include "anycableGo.name" . }},release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:8080{{ $values.env.anycablePath }} to connect to your WebSocket server"
+  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:{{ $values.env.anycablePort }}
+
+{{- end }}
+{{- end }}
+
+2. Check the health endpoint:
+{{- if $values.ingress.enable }}
+  curl https://<your-hostname>{{ $values.env.anycableHealthPath }}
+{{- else }}
+  kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "anycableGo.fullname" . }} 8080:{{ $values.env.anycablePort }}
+  curl http://localhost:8080{{ $values.env.anycableHealthPath }}
+{{- end }}
+
+{{- if $values.serviceMonitor.enabled }}
+
+3. Prometheus ServiceMonitor is enabled. Metrics are available at:
+   http://{{ include "anycableGo.fullname" . }}:{{ $values.env.anycableMetricsPort }}{{ $values.env.anycableMetricsHttp }}
+{{- end }}
+
+==============================================================================
+
+Configuration Summary:
+  Image:              {{ $values.image.repository }}:{{ $values.image.tag }}
+  Replicas:           {{ $values.replicas | default 1 }}
+{{- if $values.hpa.enabled }}
+  HPA:                Enabled (min: {{ $values.hpa.minReplicas }}, max: {{ $values.hpa.maxReplicas }})
+{{- end }}
+  WebSocket Path:     {{ $values.env.anycablePath }}
+  Health Path:        {{ $values.env.anycableHealthPath }}
+  Broadcast Adapter:  {{ $values.env.anycableBroadcastAdapter }}
+{{- if $values.tls }}
+  TLS:                Enabled
+{{- end }}
+
+For more information about AnyCable:
+  - Documentation: https://docs.anycable.io/
+  - GitHub: https://github.com/anycable/anycable-go
+  - Website: https://anycable.io/
+  - Sign up for our newsletter: https://blog.anycable.io/
+
+Need help? Join our community:
+  - Discord: https://discord.gg/stimulus-reflex
+  - Submit an issue: https://github.com/anycable/anycable

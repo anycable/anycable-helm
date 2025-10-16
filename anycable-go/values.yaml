@@ -1,10 +1,10 @@
 nodeSelector: {}
 
-replicas: 1
+replicas: 2
 
 image:
   repository: anycable/anycable-go
-  tag: 1.6.3
+  tag: 1.6.6
   pullPolicy: IfNotPresent
   pullSecrets:
     enabled: false
@@ -22,28 +22,33 @@ hpa:
   targetCPUUtilizationPercentage: 50
 
 ingress:
-  enable: false
+  enabled: false
   className: ""
-  path: /cable
-  annotations: {}
-    # nginx.ingress.kubernetes.io/proxy-body-size: "32m"
-  acme: {}
-    # hosts: []
-  nonAcme:
-    hosts: []
-    # - secretName: example-tls
-    #   names: []
-    #   tls:
-    #     crt: ""
-    #     key: ""
 
-  # - acme: false
-  #   name: example
-  #   hosts: []
-  #   path: /cable
-  #   tls:
-  #     crt: ""
-  #     key: ""
+  # ACME/Let's Encrypt simple switch
+  # When enabled, automatically adds cert-manager annotations
+  # and sets a default certificate secret name
+  acme:
+    enabled: false
+    clusterIssuer: ~
+
+  # Additional annotations (merged with ACME annotations if enabled)
+  annotations: {}
+
+  # Hosts configuration
+  hosts: []
+    # - host: anycable.example.com
+    #   paths:
+    #     - path: /cable
+    #       pathType: ImplementationSpecific
+
+  # TLS configuration
+  tls: []
+    # - secretName: anycable-tls
+    #   hosts:
+    #     - anycable.example.com
+    #   crt: ""
+    #   key: ""
 
 revisionHistoryLimit: 10
 
@@ -153,6 +158,7 @@ serviceMonitor:
   labels: {}
 
 
+# Use this section to enable TLS for anycable-go pods themselves
 tls: {}
   # secretName: "anycable-go-tls-secret"
   # Keep empty to use existing secret
@@ -172,7 +178,7 @@ env:
   anycableHost: "0.0.0.0"
 
   # listen port number
-  anycablePort: "8080"
+  anycablePort: 8080
 
   # The application secret used to secure AnyCable features: signed streams, JWT authentication, etc.
   anycableSecret: ""
@@ -232,7 +238,7 @@ env:
   anycableRedisDisableCache: ""
 
   # Max number of concurrent RPC request; should be slightly less than the RPC server concurrency, default: 28
-  anycableRpcConcurrency: "28"
+  anycableRpcConcurrency: 28
 
   # RPC service address
   anycableRpcHost: "localhost:50051"
@@ -427,7 +433,7 @@ env:
   anycableAllowedOrigins: ""
 
   # Action Cable ping interval (in seconds), default: 3
-  anycablePingInterval: "3"
+  anycablePingInterval: 3
 
   # Precision for timestamps in ping messages (s, ms, ns), default: s
   anycablePingTimestampPrecision: "s"

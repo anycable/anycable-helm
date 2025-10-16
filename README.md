@@ -49,7 +49,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to helm 
 ```shell
 helm upgrade -i anycable-go \
   --namespace anycable-go \
-  --set image.tag=1.6.3 \
+  --set image.tag=1.6.6 \
   anycable/anycable-go
 ```
 
@@ -221,24 +221,95 @@ These are the values used to configure anycable-go itself:
 
 |Value|Description|Default|
 |-----|-----------|-------|
-|**ingress.enable**|When true, enables ingress resource for anycable|`false`|
-|**ingress.host**|Hostname for the ingress resource to use|`example.com`|
-|**ingress.path**|When true, enables ingress resource for anycable|`/cable`|
-|**ingress.acme**|Enables the ingress resource annotation which tells cert-manager to issue a Let's Encrypt certificate|`{}`|
-|**ingress.nonAcme**|Enables the ingress resource annotation which tells cert-manager to use existing certificate|`{ hosts: [] }`|
-|**ingress.annotations**|Additional annotations for the ingress resource||
+|**ingress.enabled**|Enable ingress resource for anycable-go|`false`|
+|**ingress.className**|Ingress class name (e.g., `nginx`, `traefik`)|`""`|
+|**ingress.acme.enabled**|Enable cert-manager integration for automatic Let's Encrypt certificates|`false`|
+|**ingress.acme.clusterIssuer**|cert-manager ClusterIssuer to use for ACME certificates, empty means try cluster default one||
+|**ingress.annotations**|Additional annotations for the ingress resource (merged with ACME annotations)|`{}`|
+|**ingress.hosts**|List of host configurations with paths (see example below)|`[]`|
+|**ingress.tls**|TLS configuration (optional if `acme.enabled` is true - auto-generated)|`[]`|
 
-### SSL/TLS configuration
+**Example configurations:**
 
-Only in case if you can't terminate SSL at Ingress controller or need encryption inside your cluster.
+```yaml
+# Minimal HTTPS with Let's Encrypt (recommended)
+ingress:
+  enabled: true
+  acme:
+    enabled: true
+  hosts:
+    - host: anycable.example.com
+      paths:
+        - path: /cable
+
+# Multiple hosts with custom annotations
+ingress:
+  enabled: true
+  className: nginx
+  acme:
+    enabled: true
+    clusterIssuer: letsencrypt-staging
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "32m"
+  hosts:
+    - host: anycable.example.com
+      paths:
+        - path: /cable
+          pathType: Prefix
+    - host: ws.example.com
+      paths:
+        - path: /cable
+          pathType: Prefix
+
+# Manual TLS (without cert-manager)
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: anycable.example.com
+      paths:
+        - path: /cable
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: anycable-tls-secret
+      hosts:
+        - anycable.example.com
+```
+
+**Notes:**
+- When `acme.enabled: true`, TLS configuration is auto-generated if not explicitly provided
+- Auto-generated TLS secret name: `{{ $fullName }}-go-tls`
+- All hosts from `ingress.hosts` are automatically included in the TLS certificate
+- Requires [cert-manager](https://cert-manager.io/) to be installed in your cluster for ACME
+
+### SSL/TLS configuration for pod encryption
+
+Only use this if you need encryption between the ingress controller and anycable-go pods (internal cluster encryption). For standard HTTPS ingress, use `ingress.tls` configuration above.
 
 |Value|Description|Default|
 |-----|-----------|-------|
-|**tls.secretName**|Specify name of TLS secret to use. Existing secret will be used if you don't provide certificate and key||
-|**tls.crt**|Specify full certificate chain in PEM format to be written in new TLS secret||
-|**tls.key**|Specify private key in PEM format to be written in new TLS secret||
+|**tls.secretName**|Name of TLS secret containing certificate and key for pod-to-pod encryption|`""`|
+|**tls.crt**|Full certificate chain in PEM format to create new TLS secret for pod encryption|`""`|
+|**tls.key**|Private key in PEM format to create new TLS secret for pod encryption|`""`|
 
-See `values.yaml` for some more Kubernetes-specific configuration options.
+**Example - encrypting between ingress-nginx and anycable-go:**
+
+```yaml
+tls:
+  secretName: "anycable-go-internal-tls"
+  crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDXTCCAkWgAwIBAgIJAKJ3Hs8fPQRNMA0GCSqGSIb3DQEBCwUAMEUxCzAJ...
+    -----END CERTIFICATE-----
+  key: |
+    -----BEGIN PRIVATE KEY-----
+    MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC7VJTUt9Us...
+    -----END PRIVATE KEY-----
+```
+
+**Note:** If you only provide `secretName` without `crt`/`key`, the secret must already exist in your cluster.
+
+
 
 ### Custom ENV values
 

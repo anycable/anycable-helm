@@ -1,0 +1,59 @@
+{{- $values := include "anycableGo.values" . | fromYaml }}
+{{- if $values.ingress.enabled -}}
+{{- with ($values.ingress | default dict) }}
+{{- $fullName := include "anycableGo.fullname" $ -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels: {{ include "anycableGo.labels" $ | nindent 4 }}
+  annotations:
+    {{- if .acme.enabled }}
+    kubernetes.io/tls-acme: "true"
+    {{- if .acme.clusterIssuer }}
+    cert-manager.io/cluster-issuer: {{ .acme.clusterIssuer | quote }}
+    {{- end }}
+    {{- end }}
+    {{- with .annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- with .className }}
+  ingressClassName: {{ . | quote }}
+  {{- end }}
+  {{- if or .tls .acme.enabled }}
+  tls:
+    {{- if .tls }}
+    {{- range .tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+    {{- else if .acme.enabled }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ .host | quote }}
+        {{- end }}
+      secretName: {{ $fullName }}-tls-acme
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType | default "ImplementationSpecific" }}
+            backend:
+              service:
+                name: {{ $fullName }}
+                port:
+                  name: http
+          {{- end }}
+    {{- end }}
+{{- end }}
+{{- end }}
