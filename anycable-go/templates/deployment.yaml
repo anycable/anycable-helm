@@ -156,7 +156,7 @@ spec:
           {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: {{ add (int .env.anycableShutdownTimeout) 5 }}
       {{- with .tls }}
       volumes:
         - name: ssl
