@@ -1,7 +1,7 @@
 apiVersion: v2
 description: A Helm chart for anycable-go websocket server.
 name: anycable-go
-version: 0.7.0
+version: 0.7.1
 appVersion: 1.6.6
 kubeVersion: ">=1.23.0-0"
 home: https://anycable.io/
